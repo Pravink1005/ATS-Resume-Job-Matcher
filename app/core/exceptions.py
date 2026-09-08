@@ -1,0 +1,7 @@
+class ResumeJobMatcherException(Exception): pass
+class InvalidResumeException(ResumeJobMatcherException): pass
+class InvalidJobDescriptionException(ResumeJobMatcherException): pass
+class UnsupportedFileTypeException(ResumeJobMatcherException): pass
+class InvalidMatchInputException(ResumeJobMatcherException): pass
+class InvalidMatchTypeException(InvalidMatchInputException, TypeError): pass
+class InvalidMatchValueException(InvalidMatchInputException, ValueError): pass

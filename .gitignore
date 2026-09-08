@@ -1,0 +1,118 @@
+# =========================
+# Python
+# =========================
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# =========================
+# Virtual Environment
+# =========================
+
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# Environment Variables
+# =========================
+
+.env
+.env.*
+!.env.example
+
+# =========================
+# Pytest
+# =========================
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# IDE / Editors
+# =========================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Jupyter
+# =========================
+
+.ipynb_checkpoints/
+
+# =========================
+# Streamlit
+# =========================
+
+.streamlit/secrets.toml
+
+# =========================
+# Application Data
+# =========================
+
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# Uploaded resumes
+data/resumes/*
+!data/resumes/.gitkeep
+
+# Uploaded job descriptions
+data/jobs/*
+!data/jobs/.gitkeep
+
+# =========================
+# Logs
+# =========================
+
+*.log
+logs/
+
+# =========================
+# OS Files
+# =========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Temporary Files
+# =========================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# =========================
+# Build / Distribution
+# =========================
+
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Generated Reports
+# =========================
+
+reports/
+output/
+
+# =========================
+# Secrets / Credentials
+# =========================
+
+*.pem
+*.key
+credentials.json
+secrets.json
