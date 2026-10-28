@@ -5,20 +5,7 @@ A requirement is matched only when the resume contains the same skill/phrase,
 a true alias, or a conservative evidence phrase for a responsibility.
 """
 import re
-from app.matching.skill_normalizer import normalize_skill
-
-
-# True aliases only. These are equivalent names, not related technologies.
-ALIASES = {
-    "powerbi": "power bi",
-    "microsoft power bi": "power bi",
-    "postgres": "postgresql",
-    "postgres sql": "postgresql",
-    "structured query language": "sql",
-    "data cleansing": "data cleaning",
-    "exploratory data analysis": "eda",
-    "key performance indicators": "kpi",
-}
+from app.matching.skill_normalizer import ALIASES, normalize_skill
 
 # Conservative evidence phrases for requirements that are responsibilities/concepts.
 # The phrase must actually occur in the resume; we never infer it from another tool.
@@ -46,6 +33,15 @@ EVIDENCE_PATTERNS = {
     "cross-functional": [r"\bcross[- ]functional\b"],
     "stakeholder management": [r"\bstakeholder management\b", r"\bmanaged?\s+stakeholders?\b"],
     "communication": [r"\bcommunication skills?\b", r"\bcommunicat(?:ed|ing)\b"],
+    "code review": [r"\bcode\s+reviews?\b", r"\breview(?:ed|ing)?\s+code\b"],
+    "system design": [r"\bsystem\s+design\b", r"\barchitect(?:ed|ing)?\b"],
+    "agile": [r"\bagile\b", r"\bscrum\b"],
+    "scrum": [r"\bscrum\b", r"\bagile\b"],
+    "data pipeline": [r"\bdata\s+pipelines?\b", r"\bpipelines?\b"],
+    "data modeling": [r"\bdata\s+model(?:ing|ling)?\b"],
+    "problem solving": [r"\bproblem[- ]solving\b", r"\bsolve\s+complex\s+problems\b"],
+    "collaboration": [r"\bcollaborat(?:ed|ing|ion)\b", r"\bteam\s+player\b"],
+    "leadership": [r"\bleadership\b", r"\bled\s+(?:a|the)?\s*team\b", r"\bmentoring\b", r"\bmentored\b"],
 }
 
 
@@ -86,7 +82,16 @@ def _explicit_skill(text: str, canonical: str):
         "numpy": [r"\bnumpy\b"],
         "mysql": [r"\bmysql\b"],
         "postgresql": [r"\bpostgresql\b", r"\bpostgres\b"],
-        "r": [r"\br\s+(?:programming|language|studio)\b", r"\busing\s+r\b"],
+        "go": [r"\bgo\s+(?:programming|language)\b", r"\bprogramming\s+in\s+go\b", r"\bgolang\b"],
+        "react": [r"\breact(?:\.js|js)?\b"],
+        "next.js": [r"\bnext(?:\.js|js)?\b"],
+        "node.js": [r"\bnode(?:\.js|js)?\b"],
+        "vue": [r"\bvue(?:\.js|js)?\b"],
+        "angular": [r"\bangular(?:\.js|js)?\b"],
+        "kubernetes": [r"\bkubernetes\b", r"\bk8s\b"],
+        "fastapi": [r"\bfastapi\b", r"\bfast\s+api\b"],
+        "spring boot": [r"\bspring\s*boot\b"],
+        "ci/cd": [r"\bci\s*/\s*cd\b", r"\bci-cd\b", r"\bcicd\b"],
     }
     patterns = strict.get(canonical, [r"(?<!\w)" + re.escape(canonical) + r"(?!\w)"])
     return _find_pattern(text, patterns)

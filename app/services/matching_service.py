@@ -92,27 +92,27 @@ class MatchingService:
         job_kw = [x for x in jd_nlp['keywords'] if x not in jd['skills']]
         resume_kw = rd['keywords']
         km = self.kw.match(job_kw, resume_kw)
-        sim = self.tfidf.similarity(resume_text, job_text)
+        raw_sim, tfidf_calibrated = self.tfidf.calibrated_score(resume_text, job_text)
 
-        # Skills are evidence-based now: related skills are supporting evidence only.
+        # Skills are evidence-based: related skills are supporting evidence only.
         scores = {
             'skills': sm['score'],
             'experience': ex['score'],
             'education': ed['score'],
             'competencies': cm['score'],
             'keywords': km['score'],
-            'tfidf': sim * 100,
-                'title': context['title_match_score'] * .6 + context['seniority_score'] * .4,
-                'context': (context['location_score'] + context['authorization_score']) / 2,
+            'tfidf': tfidf_calibrated,
+            'title': context['title_match_score'] * .6 + context['seniority_score'] * .4,
+            'context': (context['location_score'] + context['authorization_score']) / 2,
         }
 
         # Real ATS score: requirement-level evidence is the source of truth.
-        # Legacy component scores remain in the response for transparency/backward compatibility.
+        # Dynamic weight redistribution ensures unstated categories do not unfairly penalize candidates.
         total, rec, weighted = self.scoring.calculate_ats(
             requirements=requirement_analysis,
             experience_score=ex['score'],
             education_score=ed['score'],
-            tfidf_similarity=sim,
+            tfidf_similarity=tfidf_calibrated,
             title_score=scores['title'],
             context_score=scores['context'],
         )
@@ -137,7 +137,7 @@ class MatchingService:
             'required_experience': jd['required_experience'],
             'experience_gap': ex['gap'],
             'education_status': ed['status'],
-            'tfidf_similarity': round(sim, 4),
+            'tfidf_similarity': raw_sim,
             'requirement_analysis': requirement_analysis,
             'ats_breakdown': weighted,
             'preferred_experience': preferred_experience,

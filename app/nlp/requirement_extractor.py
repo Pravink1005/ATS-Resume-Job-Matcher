@@ -24,13 +24,48 @@ class Requirement:
 
 
 SKILL_PATTERNS = [
+    # Data Analysis & BI
     ("advanced sql", "advanced sql"), ("complex joins", "complex joins"),
     ("ctes", "cte"), ("cte", "cte"), ("query optimization", "query optimization"),
     ("advanced excel", "advanced excel"), ("excel", "excel"),
-    ("python", "python"), ("pandas", "pandas"), ("numpy", "numpy"),
-    ("power bi", "power bi"), ("tableau", "tableau"), ("looker", "looker"),
-    ("mysql", "mysql"), ("postgresql", "postgresql"), ("r programming", "r"),
-    ("r language", "r"),
+    ("power bi", "power bi"), ("microsoft power bi", "power bi"),
+    ("tableau", "tableau"), ("looker", "looker"),
+    # Programming Languages
+    ("python", "python"), ("java", "java"), ("javascript", "javascript"),
+    ("typescript", "typescript"), ("c++", "c++"), ("c#", "c#"), (".net", ".net"),
+    ("go", "go"), ("golang", "go"), ("go programming", "go"), ("go language", "go"),
+    ("r programming", "r"), ("r language", "r"), ("kotlin", "kotlin"), ("swift", "swift"),
+    # Frontend
+    ("react", "react"), ("react.js", "react"), ("reactjs", "react"),
+    ("next.js", "next.js"), ("nextjs", "next.js"),
+    ("vue", "vue"), ("vue.js", "vue"), ("vuejs", "vue"),
+    ("angular", "angular"), ("angularjs", "angular"),
+    ("html", "html"), ("css", "css"), ("tailwind", "tailwind"),
+    # Backend & Frameworks
+    ("fastapi", "fastapi"), ("django", "django"), ("flask", "flask"),
+    ("spring boot", "spring boot"), ("springboot", "spring boot"),
+    ("node.js", "node.js"), ("nodejs", "node.js"),
+    ("graphql", "graphql"), ("rest api", "rest api"), ("restful api", "rest api"),
+    ("microservices", "microservices"),
+    # Databases & Caching
+    ("sql", "sql"), ("mysql", "mysql"), ("postgresql", "postgresql"), ("postgres", "postgresql"),
+    ("mongodb", "mongodb"), ("redis", "redis"), ("elasticsearch", "elasticsearch"),
+    ("snowflake", "snowflake"), ("bigquery", "bigquery"), ("redshift", "redshift"),
+    # Cloud & DevOps
+    ("aws", "aws"), ("azure", "azure"), ("gcp", "gcp"),
+    ("docker", "docker"), ("kubernetes", "kubernetes"), ("k8s", "kubernetes"),
+    ("jenkins", "jenkins"), ("git", "git"), ("github", "github"), ("gitlab", "gitlab"),
+    ("terraform", "terraform"), ("ansible", "ansible"), ("ci/cd", "ci/cd"),
+    ("linux", "linux"),
+    # Big Data & Data Eng
+    ("spark", "spark"), ("pyspark", "pyspark"), ("airflow", "airflow"),
+    ("kafka", "kafka"), ("dbt", "dbt"), ("etl", "etl"),
+    # Machine Learning & AI
+    ("machine learning", "machine learning"), ("deep learning", "deep learning"),
+    ("nlp", "nlp"), ("natural language processing", "nlp"),
+    ("llm", "llm"), ("large language models", "llm"), ("langchain", "langchain"),
+    ("scikit-learn", "scikit-learn"), ("tensorflow", "tensorflow"), ("pytorch", "pytorch"),
+    ("pandas", "pandas"), ("numpy", "numpy"),
 ]
 
 CONCEPT_PATTERNS = [
@@ -42,6 +77,11 @@ CONCEPT_PATTERNS = [
     ("data governance", "data governance"), ("actionable insights", "actionable insights"),
     ("business insights", "business insights"), ("cross-functional", "cross-functional"),
     ("stakeholder", "stakeholder management"), ("communication", "communication"),
+    ("code review", "code review"), ("system design", "system design"),
+    ("agile", "agile"), ("scrum", "scrum"), ("ci/cd pipeline", "ci/cd"),
+    ("data pipeline", "data pipeline"), ("data modeling", "data modeling"),
+    ("problem solving", "problem solving"), ("team player", "collaboration"),
+    ("collaboration", "collaboration"), ("leadership", "leadership"),
 ]
 
 
@@ -93,8 +133,10 @@ def extract_requirements(text: str):
             suppressed.add("excel")
 
         for display, canonical in SKILL_PATTERNS:
-            if display == "r programming" or display == "r language":
+            if display in ("r programming", "r language"):
                 matched = bool(re.search(r"\br\s+(?:programming|language|studio)\b", low))
+            elif display in ("go", "go programming", "go language"):
+                matched = bool(re.search(r"\bgo\s+(?:programming|language|developer|engineer)\b|\bgolang\b|(?:^|[,/|•\n:])\s*go\s*(?:[,/|•\n]|$)", low))
             else:
                 matched = bool(re.search(r"(?<!\w)" + re.escape(display) + r"(?!\w)", low))
             if matched and canonical not in suppressed and canonical not in seen:
@@ -115,7 +157,10 @@ def extract_requirements(text: str):
                 requirements.append(Requirement(
                     name=display,
                     canonical=canonical,
-                    category="responsibility" if canonical not in {"communication", "cross-functional", "stakeholder management"} else "competency",
+                    category="responsibility" if canonical not in {
+                        "communication", "cross-functional", "stakeholder management",
+                        "problem solving", "collaboration", "leadership"
+                    } else "competency",
                     required=required,
                     proficiency=None,
                     alternative_group=None,

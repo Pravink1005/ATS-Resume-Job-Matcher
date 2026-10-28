@@ -80,7 +80,90 @@ def test_education_not_penalized_when_not_in_job_description():
     job_desc = "Data Analyst\nRequired: Python, SQL\nExperience: 2 years"
     resume = "Data Analyst\nSkills: Python, SQL\nExperience: 3 years"
     res = svc.match(resume, job_desc)
-    # Breakdown education score should not be 0.0; should receive full points
-    assert res['weighted_scores']['education'] == 10.0
+    # Breakdown education score should receive its full dynamic weight (>= 10.0)
+    assert res['weighted_scores']['education'] >= 10.0
     assert res['overall_score'] >= 75.0
     assert res['recommendation'] in ('Good Match', 'Excellent Match')
+
+
+def test_dynamic_weight_rebalancing_high_match():
+    svc = MatchingService()
+    # Concise job description without competencies or responsibilities sections
+    job_desc = """
+    Job Title: Senior Python Developer
+    Required: Python, Docker, PostgreSQL
+    Experience: 5 years
+    """
+    resume = """
+    Senior Python Developer
+    Skills: Python, Docker, PostgreSQL
+    Experience: 6 years
+    """
+    res = svc.match(resume, job_desc)
+    # Candidate should not lose 20% due to unstated categories; score should be >= 90
+    assert res['overall_score'] >= 90.0
+    assert res['recommendation'] == 'Excellent Match'
+
+
+def test_modern_frontend_role_matching():
+    svc = MatchingService()
+    job_desc = """
+    Job Title: Senior Front-End Engineer
+    Required: React, Next.js, TypeScript, Tailwind
+    Experience: 4 years
+    """
+    resume = """
+    Senior Front-End Engineer
+    Skills: React.js, NextJS, TypeScript, Tailwind, Git
+    Experience: 5 years
+    """
+    res = svc.match(resume, job_desc)
+    assert res['overall_score'] >= 85.0
+    assert res['recommendation'] == 'Excellent Match'
+    matched_canons = [
+        r['canonical'] for r in res['requirement_analysis']
+        if r.get('status') == 'matched'
+    ]
+    assert 'react' in matched_canons
+    assert 'next.js' in matched_canons
+    assert 'typescript' in matched_canons
+
+
+def test_backend_cloud_alias_matching():
+    svc = MatchingService()
+    job_desc = """
+    Job Title: Backend Engineer
+    Required: Go, Kubernetes, FastAPI, PostgreSQL
+    Experience: 3 years
+    """
+    resume = """
+    Backend Engineer
+    Skills: Golang, K8s, Fast API, Postgres
+    Experience: 4 years
+    """
+    res = svc.match(resume, job_desc)
+    assert res['overall_score'] >= 85.0
+    matched_canons = [
+        r['canonical'] for r in res['requirement_analysis']
+        if r.get('status') == 'matched'
+    ]
+    assert 'go' in matched_canons
+    assert 'kubernetes' in matched_canons
+    assert 'fastapi' in matched_canons
+    assert 'postgresql' in matched_canons
+
+
+def test_calibrated_tfidf_curve():
+    from app.matching.tfidf_matcher import TfidfMatcher
+    matcher = TfidfMatcher()
+    # Zero raw similarity gives 0
+    assert matcher.calibrate_raw(0.0) == 0.0
+    # Realistic similarity of 0.20 maps to ~54+ on the grade curve
+    score_20 = matcher.calibrate_raw(0.20)
+    assert score_20 >= 50.0
+    # Strong similarity of 0.35+ maps to >= 85
+    score_35 = matcher.calibrate_raw(0.35)
+    assert score_35 >= 85.0
+    # Saturated similarity maps to 100
+    assert matcher.calibrate_raw(0.50) == 100.0
+

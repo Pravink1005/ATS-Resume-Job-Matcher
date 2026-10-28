@@ -3,10 +3,24 @@ from app.core.exceptions import InvalidJobDescriptionException
 
 class JobDescriptionParser:
     SKILL_TERMS = [
-        'python','sql','mysql','postgresql','postgres','mongodb','pandas','numpy','excel','power bi',
-        'tableau','looker','aws','azure','gcp','spark','pyspark','airflow','snowflake','docker','git',
-        'jenkins','streamlit','fastapi','etl','data cleaning','data validation','eda','data visualization',
-        'dashboard','reporting','cte','complex joins','query optimization','r'
+        # Languages & Core
+        'python', 'sql', 'mysql', 'postgresql', 'postgres', 'mongodb', 'java', 'javascript', 'typescript',
+        'c++', 'c#', '.net', 'golang', 'kotlin', 'swift', 'scala',
+        # Data & Analytics
+        'pandas', 'numpy', 'scipy', 'matplotlib', 'seaborn', 'excel', 'power bi', 'tableau', 'looker',
+        'etl', 'data cleaning', 'data validation', 'data quality', 'eda', 'data visualization', 'dashboard',
+        'reporting', 'cte', 'complex joins', 'query optimization', 'dbt', 'bigquery', 'snowflake', 'redshift',
+        # Big Data & Streaming
+        'spark', 'pyspark', 'airflow', 'kafka', 'hadoop',
+        # AI & ML
+        'scikit-learn', 'tensorflow', 'pytorch', 'keras', 'machine learning', 'deep learning', 'nlp',
+        'llm', 'langchain', 'huggingface', 'opencv',
+        # Web & Frameworks
+        'react', 'next.js', 'vue', 'angular', 'node.js', 'fastapi', 'django', 'flask', 'spring boot',
+        'graphql', 'rest api', 'api', 'microservices', 'html', 'css', 'tailwind', 'streamlit',
+        # Cloud & DevOps
+        'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'jenkins', 'git', 'github', 'gitlab', 'ci/cd',
+        'terraform', 'ansible', 'linux', 'ubuntu', 'firebase', 'redis', 'elasticsearch', 'r', 'go'
     ]
 
     def parse(self, job_description):
@@ -37,6 +51,9 @@ class JobDescriptionParser:
         for x in self.SKILL_TERMS:
             if x == 'r':
                 if re.search(r'\br\s+(?:programming|language|studio)\b|\busing\s+r\b|\bprogramming\s+in\s+r\b', low):
+                    found.add(x)
+            elif x == 'go':
+                if re.search(r'\bgo\s+(?:programming|language)\b|\bprogramming\s+in\s+go\b|\bgolang\b', low):
                     found.add(x)
             elif re.search(r'(?<!\w)' + re.escape(x) + r'(?!\w)', low):
                 found.add(x)

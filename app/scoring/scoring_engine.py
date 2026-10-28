@@ -44,24 +44,42 @@ class ScoringEngine:
         for (category, _), scores in alternative_groups.items():
             category_scores[category].append(max(scores))
 
-        breakdown = {}
-        for category, weight in self.ATS_WEIGHTS.items():
+        raw_scores = {}
+        for category in self.ATS_WEIGHTS:
             if category == 'experience':
-                score = float(experience_score)
+                raw_scores[category] = float(experience_score)
             elif category == 'education':
                 values = category_scores['education']
-                score = sum(values) / len(values) if values else float(education_score)
+                raw_scores[category] = sum(values) / len(values) if values else float(education_score)
             elif category == 'title':
-                score = float(title_score)
+                raw_scores[category] = float(title_score)
             elif category == 'context':
-                score = float(context_score)
+                raw_scores[category] = float(context_score)
             elif category == 'tfidf':
-                score = float(tfidf_similarity) * 100
+                raw_scores[category] = float(tfidf_similarity)
+            elif category in ('competency', 'responsibility', 'technical_skill'):
+                values = category_scores[category]
+                if values:
+                    raw_scores[category] = sum(values) / len(values)
+                else:
+                    # Job description did not state requirements for this category:
+                    # mark inactive so candidate is not unfairly penalized 10-20%
+                    raw_scores[category] = None
             else:
                 values = category_scores[category]
-                score = sum(values) / len(values) if values else 0.0
-            score = max(0.0, min(100.0, score))
-            breakdown[category] = round(score * weight, 2)
+                raw_scores[category] = sum(values) / len(values) if values else 0.0
+
+        active_categories = {k: v for k, v in raw_scores.items() if v is not None}
+        total_active_weight = sum(self.ATS_WEIGHTS[cat] for cat in active_categories) or 1.0
+
+        breakdown = {}
+        for category in self.ATS_WEIGHTS:
+            if category in active_categories:
+                normalized_weight = self.ATS_WEIGHTS[category] / total_active_weight
+                category_score = max(0.0, min(100.0, active_categories[category]))
+                breakdown[category] = round(category_score * normalized_weight, 2)
+            else:
+                breakdown[category] = 0.0
 
         total = min(100.0, round(sum(breakdown.values()), 2))
         if total >= 85:

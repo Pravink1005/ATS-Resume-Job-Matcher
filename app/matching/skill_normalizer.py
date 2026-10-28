@@ -1,4 +1,84 @@
-ALIASES={'powerbi':'power bi','microsoft power bi':'power bi','microsoft excel':'excel','structured query language':'sql','postgres':'postgresql','postgres sql':'postgresql','python pandas':'pandas','numpy python':'numpy','exploratory data analysis':'eda','data cleansing':'data cleaning','data visualisation':'data visualization','data visualizations':'data visualization','key performance indicators':'kpi','business intelligence':'bi','tableau software':'tableau'}
+ALIASES = {
+    # Power BI & Excel
+    'powerbi': 'power bi',
+    'microsoft power bi': 'power bi',
+    'power-bi': 'power bi',
+    'microsoft excel': 'excel',
+    'advanced excel': 'excel',
+    'ms excel': 'excel',
+    # SQL & Databases
+    'structured query language': 'sql',
+    'postgres': 'postgresql',
+    'postgres sql': 'postgresql',
+    'postgre sql': 'postgresql',
+    'postgresql database': 'postgresql',
+    'mongo': 'mongodb',
+    'mongodb database': 'mongodb',
+    'rdbms': 'database',
+    # Frontend
+    'reactjs': 'react',
+    'react.js': 'react',
+    'react js': 'react',
+    'nextjs': 'next.js',
+    'next.js': 'next.js',
+    'next js': 'next.js',
+    'nodejs': 'node.js',
+    'node.js': 'node.js',
+    'node js': 'node.js',
+    'vuejs': 'vue',
+    'vue.js': 'vue',
+    'vue js': 'vue',
+    'angularjs': 'angular',
+    'angular.js': 'angular',
+    'angular js': 'angular',
+    'ts': 'typescript',
+    'js': 'javascript',
+    # Backend & Cloud
+    'fast api': 'fastapi',
+    'springboot': 'spring boot',
+    'spring-boot': 'spring boot',
+    'golang': 'go',
+    'go language': 'go',
+    'k8s': 'kubernetes',
+    'k8': 'kubernetes',
+    'amazon web services': 'aws',
+    'google cloud': 'gcp',
+    'google cloud platform': 'gcp',
+    'microsoft azure': 'azure',
+    'cicd': 'ci/cd',
+    'ci-cd': 'ci/cd',
+    'continuous integration': 'ci/cd',
+    'restful api': 'rest api',
+    'restful apis': 'rest api',
+    'rest apis': 'rest api',
+    'micro-services': 'microservices',
+    # AI & Data
+    'python pandas': 'pandas',
+    'numpy python': 'numpy',
+    'sklearn': 'scikit-learn',
+    'scikit learn': 'scikit-learn',
+    'tf': 'tensorflow',
+    'machine learning': 'machine learning',
+    'ai/ml': 'machine learning',
+    'artificial intelligence': 'machine learning',
+    'deep learning': 'deep learning',
+    'nlp': 'nlp',
+    'natural language processing': 'nlp',
+    'llm': 'llm',
+    'llms': 'llm',
+    'large language models': 'llm',
+    'exploratory data analysis': 'eda',
+    'data cleansing': 'data cleaning',
+    'data visualisation': 'data visualization',
+    'data visualizations': 'data visualization',
+    'key performance indicators': 'kpi',
+    'business intelligence': 'bi',
+    'tableau software': 'tableau',
+}
+
 def normalize_skill(s):
-    s=' '.join(str(s).lower().strip().split()); return ALIASES.get(s,s)
-def normalize_skills(items): return sorted({normalize_skill(x) for x in items if str(x).strip()})
+    s = ' '.join(str(s).lower().strip().split())
+    return ALIASES.get(s, s)
+
+def normalize_skills(items):
+    return sorted({normalize_skill(x) for x in items if str(x).strip()})
