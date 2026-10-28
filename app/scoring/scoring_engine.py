@@ -6,20 +6,23 @@ class ScoringEngine:
         'experience': .20,
         'education': .10,
         'competency': .10,
-        'responsibility': .15,
-        'tfidf': .10,
+        'responsibility': .10,
+        'title': .05,
+        'context': .05,
+        'tfidf': .05,
     }
 
     def calculate(self,scores):
         weighted={k:round(float(scores.get(k,0))*w,2) for k,w in self.WEIGHTS.items()}
-        total=round(sum(weighted.values()),2)
+        total=min(100.0, round(sum(weighted.values()),2))
         if total>=85: rec='Excellent Match'
         elif total>=70: rec='Good Match'
         elif total>=55: rec='Moderate Match'
         else: rec='Low Match'
         return total,rec,weighted
 
-    def calculate_ats(self, requirements, experience_score=0, tfidf_similarity=0):
+    def calculate_ats(self, requirements, experience_score=0, education_score=100,
+                      tfidf_similarity=0, title_score=100, context_score=100):
         """Calculate the explainable score from structured requirement evidence."""
         category_scores = {category: [] for category in self.ATS_WEIGHTS if category != 'tfidf'}
         alternative_groups = {}
@@ -45,6 +48,13 @@ class ScoringEngine:
         for category, weight in self.ATS_WEIGHTS.items():
             if category == 'experience':
                 score = float(experience_score)
+            elif category == 'education':
+                values = category_scores['education']
+                score = sum(values) / len(values) if values else float(education_score)
+            elif category == 'title':
+                score = float(title_score)
+            elif category == 'context':
+                score = float(context_score)
             elif category == 'tfidf':
                 score = float(tfidf_similarity) * 100
             else:
@@ -53,7 +63,7 @@ class ScoringEngine:
             score = max(0.0, min(100.0, score))
             breakdown[category] = round(score * weight, 2)
 
-        total = round(sum(breakdown.values()), 2)
+        total = min(100.0, round(sum(breakdown.values()), 2))
         if total >= 85:
             recommendation = 'Excellent Match'
         elif total >= 70:

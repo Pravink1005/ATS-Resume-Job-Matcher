@@ -4,16 +4,18 @@ Explainable resume-to-job matching for evaluating how well a resume fits a job d
 
 ## Features
 
-- Upload one PDF, DOCX, or TXT resume
-- Paste a job description and analyze it in seconds
+- Upload one PDF, DOCX, or TXT resume with magic-byte header validation
+- Dual Job Source: paste custom text manually **OR** select live roles from connected Supabase database (5,000+ real job descriptions)
 - FastAPI backend with interactive Swagger documentation
-- Streamlit interface for the complete matching workflow
+- Streamlit interface with 4-tab evaluation (Overview, Requirements, Evidence, ATS Notes) and Match History viewer
 - Exact, alias, partial, and related skill matching
 - Structured job requirement extraction
 - Experience gap and education relevance analysis
+- Context matching: Title overlap, Seniority level, Location compatibility, and Work authorization
 - Explainable requirement-level evidence and recommendations
 - TF-IDF text similarity as a supporting signal
-- SQLite persistence for resumes, jobs, and match results
+- SQLite persistence with complete requirement and context restoration
+- Downloadable formatted `.docx` ATS report
 - Docker and Docker Compose support
 
 ## How Scoring Works

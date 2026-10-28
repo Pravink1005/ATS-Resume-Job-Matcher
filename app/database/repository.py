@@ -14,13 +14,24 @@ class JobRepository:
     def get_by_id(db,job_id): return db.get(Job,job_id)
 class MatchRepository:
     @staticmethod
-    def create(db,data):
-        payload=dict(data)
-        for k,v in list(payload.items()):
-            if isinstance(v,(list,dict)): payload[k]=json.dumps(v)
-        x=MatchResult(**payload); db.add(x); db.commit(); db.refresh(x); return x
+    def create(db, data):
+        payload = dict(data)
+        for k, v in list(payload.items()):
+            if isinstance(v, (list, dict)):
+                payload[k] = json.dumps(v)
+        x = MatchResult(**payload)
+        db.add(x)
+        db.commit()
+        db.refresh(x)
+        return x
+
     @staticmethod
-    def get_by_id(db,match_id): return db.get(MatchResult,match_id)
+    def get_by_id(db, match_id):
+        return db.get(MatchResult, match_id)
+
+    @staticmethod
+    def get_recent(db, limit=20):
+        return db.query(MatchResult).order_by(MatchResult.id.desc()).limit(limit).all()
 
 def decode(v):
     if v is None:return []

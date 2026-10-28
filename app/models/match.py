@@ -1,5 +1,38 @@
-from sqlalchemy import Column,Integer,Float,String,Text,DateTime,ForeignKey
+from sqlalchemy import Column, Integer, Float, String, Text, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from app.database.database import Base
+
 class MatchResult(Base):
-    __tablename__='match_results'; id=Column(Integer,primary_key=True); resume_id=Column(Integer,ForeignKey('resumes.id'),index=True); job_id=Column(Integer,ForeignKey('jobs.id'),index=True); overall_score=Column(Float); recommendation=Column(String(50)); skills_score=Column(Float); experience_score=Column(Float); education_score=Column(Float); competency_score=Column(Float); keyword_score=Column(Float); tfidf_score=Column(Float); matched_skills=Column(Text); missing_skills=Column(Text); exact_skill_matches=Column(Text); alias_skill_matches=Column(Text); partial_skill_matches=Column(Text); related_skill_matches=Column(Text); matched_competencies=Column(Text); missing_competencies=Column(Text); matched_keywords=Column(Text); missing_keywords=Column(Text); candidate_experience=Column(Float); required_experience=Column(Float); experience_gap=Column(Float); experience_status=Column(String(255)); education_status=Column(String(255)); tfidf_similarity=Column(Float); explanations=Column(Text); created_at=Column(DateTime(timezone=True),server_default=func.now())
+    __tablename__ = 'match_results'
+    id = Column(Integer, primary_key=True)
+    resume_id = Column(Integer, ForeignKey('resumes.id'), index=True)
+    job_id = Column(Integer, ForeignKey('jobs.id'), index=True)
+    overall_score = Column(Float)
+    recommendation = Column(String(50))
+    skills_score = Column(Float)
+    experience_score = Column(Float)
+    education_score = Column(Float)
+    competency_score = Column(Float)
+    keyword_score = Column(Float)
+    tfidf_score = Column(Float)
+    matched_skills = Column(Text)
+    missing_skills = Column(Text)
+    exact_skill_matches = Column(Text)
+    alias_skill_matches = Column(Text)
+    partial_skill_matches = Column(Text)
+    related_skill_matches = Column(Text)
+    matched_competencies = Column(Text)
+    missing_competencies = Column(Text)
+    matched_keywords = Column(Text)
+    missing_keywords = Column(Text)
+    candidate_experience = Column(Float)
+    required_experience = Column(Float)
+    experience_gap = Column(Float)
+    experience_status = Column(String(255))
+    education_status = Column(String(255))
+    tfidf_similarity = Column(Float)
+    explanations = Column(Text)
+    requirement_analysis = Column(Text, nullable=True)
+    context_match = Column(Text, nullable=True)
+    weighted_scores = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -20,6 +20,8 @@ class JobDescriptionParser:
             'skills': self._skills(text),
             'required_experience': self._experience(text),
             'education': self._education(text),
+            'location': self._location(text),
+            'work_authorization': self._work_authorization(text),
             'description': text,
         }
 
@@ -56,3 +58,20 @@ class JobDescriptionParser:
             'computer science','statistics','mathematics','economics','information systems',
             'information technology','data science','business analytics','business analysis'
         ] if x in low]
+
+    def _location(self, text):
+        low = text.lower()
+        if re.search(r'\b(remote|work from home|fully remote)\b', low):
+            return 'remote'
+        m = re.search(r'\b(?:location|located in|based in)\s*[:\-]?\s*([a-z][^.!?\n]{1,60})', text, re.I)
+        return m.group(1).strip(' .,').lower() if m else None
+
+    def _work_authorization(self, text):
+        low = text.lower()
+        if re.search(r'no\s+(?:visa\s+)?sponsorship|without\s+sponsorship|must\s+be\s+authorized', low):
+            return 'authorized_without_sponsorship'
+        if re.search(r'sponsorship\s+(?:is\s+)?(?:available|provided)', low):
+            return 'sponsorship_available'
+        if re.search(r'authorized\s+to\s+work|work\s+authorization|legally\s+authorized|right\s+to\s+work|visa\s+sponsorship', low):
+            return 'authorization_required'
+        return None

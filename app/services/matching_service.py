@@ -9,6 +9,7 @@ from app.matching.education_intelligence import EducationIntelligence
 from app.matching.competency_matcher import match_competencies
 from app.matching.keyword_intelligence import KeywordIntelligence
 from app.matching.tfidf_matcher import TFIDFMatcher
+from app.matching.context_matcher import match_context
 from app.scoring.scoring_engine import ScoringEngine
 from app.services.ats_explanation_service import ATSExplanationService
 
@@ -52,6 +53,7 @@ class MatchingService:
         rd = self.nlp.analyze(resume_text)
         jd = self.job_parser.parse(job_text)
         jd_nlp = self.nlp.analyze(job_text)
+        context = match_context(resume_text, jd['job_title'], job_text)
 
         # Phase 1: extract explicit job requirements and match them to resume evidence.
         requirements = extract_requirements(job_text)
@@ -100,6 +102,8 @@ class MatchingService:
             'competencies': cm['score'],
             'keywords': km['score'],
             'tfidf': sim * 100,
+                'title': context['title_match_score'] * .6 + context['seniority_score'] * .4,
+                'context': (context['location_score'] + context['authorization_score']) / 2,
         }
 
         # Real ATS score: requirement-level evidence is the source of truth.
@@ -107,7 +111,10 @@ class MatchingService:
         total, rec, weighted = self.scoring.calculate_ats(
             requirements=requirement_analysis,
             experience_score=ex['score'],
+            education_score=ed['score'],
             tfidf_similarity=sim,
+            title_score=scores['title'],
+            context_score=scores['context'],
         )
 
         result = {
@@ -134,6 +141,8 @@ class MatchingService:
             'requirement_analysis': requirement_analysis,
             'ats_breakdown': weighted,
             'preferred_experience': preferred_experience,
+            'job_title': jd['job_title'],
+            'context_match': context,
         }
         result['explanations'] = self.explainer.explain(result)
         return result
