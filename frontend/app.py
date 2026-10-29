@@ -696,7 +696,7 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
                         f"🏢 **{chosen_job['company']}** | 📍 **{chosen_job['location']}** | 📝 {len(jd.split()):,} words | {desc_badge}"
                     )
                     if chosen_job.get('link'):
-                        st.markdown(f"[🔗 View / Apply on LinkedIn]({chosen_job['link']})")
+                        st.markdown(f"[🔗 Apply]({chosen_job['link']})")
                 else:
                     st.info('No matching jobs found in Supabase. Try adjusting your search term or category.')
                     jd = ''
@@ -1433,7 +1433,7 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
 
                     with b_col2:
                         if r.get('link'):
-                            st.link_button('🔗 Apply on LinkedIn', r['link'], use_container_width=True)
+                            st.link_button('🔗 Apply', r['link'], use_container_width=True)
                         else:
                             st.caption('No direct application URL')
 
@@ -1451,7 +1451,7 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                         if not is_full_desc:
                             st.info(
                                 f'ℹ️ This database record only contains a brief {word_cnt}-word search snippet from the job board. '
-                                f'Click the "Apply on LinkedIn" button above to view full responsibilities and qualifications online.'
+                                f'Click the "Apply" button above to view full responsibilities and qualifications online.'
                             )
                         st.text_area(
                             f'Job Description for {r["title"]}:',
