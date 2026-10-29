@@ -189,3 +189,34 @@ def test_calibrated_tfidf_curve():
     # Saturated similarity maps to 100
     assert matcher.calibrate_raw(0.50) == 100.0
 
+
+def test_missing_core_skills_gated_to_moderate_match():
+    svc = MatchingService()
+    # Job requires heavy DevOps / SRE tools (Kubernetes, Linux, Terraform, Go, Java, Azure, AWS, Git, CI/CD)
+    job_desc = """
+    Job Title: Senior Platform Engineer
+    Key Responsibilities: Build automated pipelines, monitor environments, resolve issues.
+    Required Qualifications:
+    Hands-on experience with Linux, Git, containers, Kubernetes, and at least one major cloud platform (OCI, AWS, or Azure).
+    Experience developing infrastructure-as-code modules using Terraform.
+    Proficiency in Python, Go, Java, or a comparable language.
+    Experience building CI/CD pipelines.
+    """
+    # Candidate only has Python, Git, AWS, and CI/CD (missing Kubernetes, Linux, Terraform, Go, Java, Azure)
+    resume = """
+    Pravin Kumar
+    Junior Data Professional
+    Experience: 1.3 years
+    Skills: Python, SQL, AWS, Git, CI/CD, Tableau
+    Education: B.Sc. Information Technology
+    """
+    res = svc.match(resume, job_desc)
+    # The candidate is missing > 50% of the core technical requirements
+    # Overall score must be gated at Moderate Match (< 60%), never an inflated 'Excellent Match'
+    assert res['overall_score'] <= 60.0
+    assert res['recommendation'] in ('Moderate Match', 'Low Match')
+    assert 'kubernetes' in res['missing_skills']
+    assert 'linux' in res['missing_skills']
+    assert 'terraform' in res['missing_skills']
+
+

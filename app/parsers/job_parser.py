@@ -43,7 +43,18 @@ class JobDescriptionParser:
         m = re.search(r'(?im)^\s*(?:job title|role|position)\s*:\s*(.+)$', text)
         if m:
             return m.group(1).strip()
-        return text.splitlines()[0].strip()[:150] if text.splitlines() else 'Unknown Role'
+        first_line = text.splitlines()[0].strip() if text.splitlines() else ''
+        if first_line and len(first_line.split()) <= 7 and not first_line.endswith('.') and len(first_line) <= 60:
+            return first_line
+
+        # Search for role title keywords in the text
+        role_pattern = r'\b(platform engineer(?:ing)?|site reliability engineer|sre|devops engineer|devops|software engineer|backend engineer|frontend engineer|full[- ]stack engineer|data engineer|data analyst|etl developer|cloud engineer|machine learning engineer|systems engineer)\b'
+        roles_found = [m.group(0).title() for m in re.finditer(role_pattern, text, re.I)]
+        if roles_found:
+            unique_roles = list(dict.fromkeys(roles_found))[:2]
+            return ' / '.join(unique_roles)
+
+        return first_line[:60] if first_line else 'Unknown Role'
 
     def _skills(self, text):
         low = text.lower()
@@ -53,7 +64,7 @@ class JobDescriptionParser:
                 if re.search(r'\br\s+(?:programming|language|studio)\b|\busing\s+r\b|\bprogramming\s+in\s+r\b', low):
                     found.add(x)
             elif x == 'go':
-                if re.search(r'\bgo\s+(?:programming|language)\b|\bprogramming\s+in\s+go\b|\bgolang\b', low):
+                if re.search(r'\bgo\s+(?:programming|language|developer|engineer)\b|\bgolang\b|(?:^|[,/|•\n:])\s*go\s*(?:[,/|•\n]|$)', low):
                     found.add(x)
             elif re.search(r'(?<!\w)' + re.escape(x) + r'(?!\w)', low):
                 found.add(x)

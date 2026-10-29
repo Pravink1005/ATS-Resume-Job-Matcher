@@ -578,6 +578,17 @@ st.write('')
 # MODE 1: DEEP SINGLE JOB MATCH
 # ==============================================================================
 if main_nav == '🎯 Mode 1: Deep Single Job Match':
+    if st.session_state.get('recommendations_data'):
+        back_col1, back_col2 = st.columns([1.8, 3])
+        with back_col1:
+            if st.button('⬅️ Back to Top Search Recommendations', key='btn_back_to_recs_banner', type='secondary', use_container_width=True):
+                st.session_state['main_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
+                st.rerun()
+        with back_col2:
+            num_recs = len(st.session_state['recommendations_data'].get('recommendations', []))
+            st.caption(f'💡 Deep inspecting selected role. Return to your {num_recs} ranked job recommendations anytime.')
+        st.write('')
+
     with st.container(border=True):
         st.markdown('### 🎯 Configure Single Job Evaluation')
         input_col, job_col = st.columns(2, gap='large')
@@ -802,13 +813,20 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
                 'education relevance, soft competencies, and calibrated TF-IDF semantic corpus similarity.'
             )
 
-            st.download_button(
-                '📥 Download Formatted DOCX Report',
-                data=build_docx_report(data, st.session_state.get('resume_name', 'resume')),
-                file_name='ResumeMatch_ATS_Report.docx',
-                mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                use_container_width=False,
-            )
+            action_btn_col1, action_btn_col2 = st.columns([1.2, 1.2])
+            with action_btn_col1:
+                st.download_button(
+                    '📥 Download Formatted DOCX Report',
+                    data=build_docx_report(data, st.session_state.get('resume_name', 'resume')),
+                    file_name='ResumeMatch_ATS_Report.docx',
+                    mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    use_container_width=True,
+                )
+            with action_btn_col2:
+                if st.session_state.get('recommendations_data'):
+                    if st.button('⬅️ Back to Top Search Recommendations', key='btn_back_to_recs_results', type='secondary', use_container_width=True):
+                        st.session_state['main_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
+                        st.rerun()
 
         st.write('')
 

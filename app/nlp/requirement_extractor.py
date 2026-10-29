@@ -121,11 +121,8 @@ def extract_requirements(text: str):
     for sentence in sentences:
         low = sentence.lower()
         required = _required(sentence)
-        # An "or" list is an alternative group: one successful option should satisfy the group.
-        alt_group = None
-        if re.search(r"\bor\b", low) and any(x in low for x, _ in SKILL_PATTERNS):
-            alt_group = "alt_" + hashlib.sha1(sentence.encode("utf-8")).hexdigest()[:10]
-
+        # Identify skills present in this sentence
+        sentence_skills = []
         suppressed = set()
         if re.search(r"\badvanced\s+sql\b", low):
             suppressed.add("sql")
@@ -133,24 +130,47 @@ def extract_requirements(text: str):
             suppressed.add("excel")
 
         for display, canonical in SKILL_PATTERNS:
+            if canonical in suppressed or canonical in seen:
+                continue
             if display in ("r programming", "r language"):
-                matched = bool(re.search(r"\br\s+(?:programming|language|studio)\b", low))
+                m = bool(re.search(r"\br\s+(?:programming|language|studio)\b", low))
             elif display in ("go", "go programming", "go language"):
-                matched = bool(re.search(r"\bgo\s+(?:programming|language|developer|engineer)\b|\bgolang\b|(?:^|[,/|•\n:])\s*go\s*(?:[,/|•\n]|$)", low))
+                m = bool(re.search(r"\bgo\s+(?:programming|language|developer|engineer)\b|\bgolang\b|(?:^|[,/|•\n:])\s*go\s*(?:[,/|•\n]|$)", low))
             else:
-                matched = bool(re.search(r"(?<!\w)" + re.escape(display) + r"(?!\w)", low))
-            if matched and canonical not in suppressed and canonical not in seen:
-                req = Requirement(
-                    name=display,
-                    canonical=canonical,
-                    category="technical_skill",
-                    required=required,
-                    proficiency=_proficiency(sentence, display),
-                    alternative_group=alt_group,
-                    source=sentence,
-                )
-                requirements.append(req)
-                seen.add(canonical)
+                m = bool(re.search(r"(?<!\w)" + re.escape(display) + r"(?!\w)", low))
+            if m:
+                sentence_skills.append((display, canonical))
+
+        # Build fine-grained alternative groups for skills explicitly in an "or" clause
+        skill_alt_map = {}
+        if re.search(r"\bor\b", low) and len(sentence_skills) >= 2:
+            # 1. Parenthetical or clauses, e.g. "(OCI, AWS, or Azure)"
+            for p in re.findall(r"\(([^)]*\bor\b[^)]*)\)", low):
+                p_grp = "alt_" + hashlib.sha1(p.encode("utf-8")).hexdigest()[:8]
+                for disp, canon in sentence_skills:
+                    if re.search(r"(?<!\w)" + re.escape(disp) + r"(?!\w)", p):
+                        skill_alt_map[canon] = p_grp
+
+            # 2. Comma/space separated series ending in "or", e.g. "Python, Go, Java, or a comparable language"
+            for o in re.findall(r"(?:[a-z0-9+#.]+(?:,\s*|\s+)){1,5}or\s+[a-z0-9+#.]+", low):
+                matching = [canon for disp, canon in sentence_skills if re.search(r"(?<!\w)" + re.escape(disp) + r"(?!\w)", o)]
+                if len(matching) >= 2:
+                    o_grp = "alt_" + hashlib.sha1(o.encode("utf-8")).hexdigest()[:8]
+                    for canon in matching:
+                        skill_alt_map[canon] = o_grp
+
+        for display, canonical in sentence_skills:
+            req = Requirement(
+                name=display,
+                canonical=canonical,
+                category="technical_skill",
+                required=required,
+                proficiency=_proficiency(sentence, display),
+                alternative_group=skill_alt_map.get(canonical),
+                source=sentence,
+            )
+            requirements.append(req)
+            seen.add(canonical)
 
         for display, canonical in CONCEPT_PATTERNS:
             if re.search(r"(?<!\w)" + re.escape(display) + r"(?!\w)", low) and canonical not in seen:

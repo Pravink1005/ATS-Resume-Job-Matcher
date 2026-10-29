@@ -22,7 +22,7 @@ class ScoringEngine:
         return total,rec,weighted
 
     def calculate_ats(self, requirements, experience_score=0, education_score=100,
-                      tfidf_similarity=0, title_score=100, context_score=100):
+                      tfidf_similarity=0, title_score=100, context_score=100, skills_score=None):
         """Calculate the explainable score from structured requirement evidence."""
         category_scores = {category: [] for category in self.ATS_WEIGHTS if category != 'tfidf'}
         alternative_groups = {}
@@ -57,7 +57,19 @@ class ScoringEngine:
                 raw_scores[category] = float(context_score)
             elif category == 'tfidf':
                 raw_scores[category] = float(tfidf_similarity)
-            elif category in ('competency', 'responsibility', 'technical_skill'):
+            elif category == 'technical_skill':
+                values = category_scores['technical_skill']
+                if values:
+                    req_avg = sum(values) / len(values)
+                    if skills_score is not None:
+                        raw_scores[category] = round((req_avg + float(skills_score)) / 2.0, 2)
+                    else:
+                        raw_scores[category] = req_avg
+                elif skills_score is not None:
+                    raw_scores[category] = float(skills_score)
+                else:
+                    raw_scores[category] = None
+            elif category in ('competency', 'responsibility'):
                 values = category_scores[category]
                 if values:
                     raw_scores[category] = sum(values) / len(values)
@@ -82,6 +94,14 @@ class ScoringEngine:
                 breakdown[category] = 0.0
 
         total = min(100.0, round(sum(breakdown.values()), 2))
+
+        # Core Technical Qualification Gate:
+        # If candidate misses more than half of the required technical skills (< 50%),
+        # overall ATS score must be gated at Moderate Match (< 60%) to prevent false positives.
+        req_tech_avg = raw_scores.get('technical_skill') or 0.0
+        if req_tech_avg < 50.0 or (skills_score is not None and float(skills_score) < 50.0 and req_tech_avg < 60.0):
+            total = min(total, 58.0)
+
         if total >= 85:
             recommendation = 'Excellent Match'
         elif total >= 70:

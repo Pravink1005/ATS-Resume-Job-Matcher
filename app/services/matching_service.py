@@ -119,6 +119,7 @@ class MatchingService:
             tfidf_similarity=tfidf_calibrated,
             title_score=scores['title'],
             context_score=scores['context'],
+            skills_score=scores['skills'],
         )
 
         result = {
