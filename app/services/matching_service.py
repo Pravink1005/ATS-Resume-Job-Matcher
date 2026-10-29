@@ -112,7 +112,7 @@ class MatchingService:
 
         # Real ATS score: requirement-level evidence is the source of truth.
         # Dynamic weight redistribution ensures unstated categories do not unfairly penalize candidates.
-        total, rec, weighted = self.scoring.calculate_ats(
+        total, rec, weighted, applied_gates, gate_reasons = self.scoring.calculate_ats(
             requirements=requirement_analysis,
             experience_score=ex['score'],
             education_score=ed['score'],
@@ -120,11 +120,17 @@ class MatchingService:
             title_score=scores['title'],
             context_score=scores['context'],
             skills_score=scores['skills'],
+            candidate_experience=rd['experience'],
+            required_experience=jd['required_experience'],
+            return_gates=True,
         )
 
         result = {
             'overall_score': total,
             'recommendation': rec,
+            'is_gated': len(applied_gates) > 0,
+            'applied_gates': applied_gates,
+            'gate_reasons': gate_reasons,
             'component_scores': {k: round(v, 2) for k, v in scores.items()},
             'weighted_scores': weighted,
             'matched_skills': sm['matched'],

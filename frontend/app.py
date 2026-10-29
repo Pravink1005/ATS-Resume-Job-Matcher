@@ -445,6 +445,11 @@ def build_docx_report(data, resume_name):
         f'Education: {status_label(data.get("education_status"))}'
     )
 
+    if data.get('is_gated') and data.get('gate_reasons'):
+        document.add_heading('Production Safety & Recruiter Knockout Gates Enforced', level=1)
+        for reason in data.get('gate_reasons'):
+            document.add_paragraph(f"⚠️ {reason}", style='List Bullet')
+
     document.add_heading('Requirement Evidence', level=1)
     requirements = data.get('requirement_analysis', [])
     if requirements:
@@ -822,15 +827,25 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
         with summary_col:
             st.markdown(f"## {data.get('recommendation', 'Match Analysis Result')}")
             res_label = st.session_state.get("resume_name", "Resume")
+            gate_pill = '<span class="skill-pill pill-missing">🛡️ Safety Gate Active</span>' if data.get('is_gated') else '<span class="skill-pill pill-match">✅ Verified Direct Fit</span>'
             st.markdown(
                 f'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0.8rem;">'
                 f'<span class="skill-pill pill-neutral">📄 File: {res_label}</span>'
                 f'<span class="skill-pill pill-match">✓ {len(data.get("matched_skills", []))} Matched Skills</span>'
                 f'<span class="skill-pill pill-missing">✕ {len(data.get("missing_skills", []))} Skill Gaps</span>'
                 f'<span class="skill-pill pill-alias">⏱️ {float(data.get("candidate_experience", 0)):.1f} yrs Candidate Tenure</span>'
+                f'{gate_pill}'
                 f'</div>',
                 unsafe_allow_html=True
             )
+            if data.get('is_gated') and data.get('gate_reasons'):
+                for reason in data.get('gate_reasons'):
+                    st.markdown(
+                        f'<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;'
+                        f'background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;font-size:0.85rem;margin-bottom:0.6rem;">'
+                        f'🛡️ <strong>Knockout / Safety Gate Active:</strong> {reason}</div>',
+                        unsafe_allow_html=True
+                    )
             st.write(
                 'Objective evaluation synthesized from direct textual evidence, structured experience tenure calculation, '
                 'education relevance, soft competencies, and calibrated TF-IDF semantic corpus similarity.'
@@ -1368,10 +1383,12 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                             unsafe_allow_html=True
                         )
                     with head_col2:
+                        gated_tag = '<div style="display:inline-block;margin-top:4px;padding:2px 6px;border-radius:6px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;font-size:0.68rem;font-weight:700;">🛡️ SAFETY GATED</div>' if r.get('is_gated') else ''
                         st.markdown(
                             f'<div style="text-align:right;">'
                             f'<div style="font-size:2.2rem;font-weight:800;color:{score_color};line-height:1;">{score:.1f}%</div>'
                             f'<div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;">{r["recommendation"]}</div>'
+                            f'{gated_tag}'
                             f'</div>',
                             unsafe_allow_html=True
                         )
@@ -1388,6 +1405,8 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                         f'</div>',
                         unsafe_allow_html=True
                     )
+                    if r.get('is_gated') and r.get('gate_reasons'):
+                        st.caption(f"🛡️ **Safety Gate**: {r['gate_reasons'][0]}")
 
                     # Skills pills
                     st.markdown('**Matched Skills:**')

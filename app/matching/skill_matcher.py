@@ -19,6 +19,22 @@ RELATED = {
     'numpy': {'python'},
     'eda': {'exploratory data analysis','trend analysis','analysis'},
     'etl': {'data extraction','data cleaning','data processing'},
+    # Cloud, DevOps & Observability
+    'aws': {'cloud platform', 'azure', 'gcp', 'oci'},
+    'azure': {'cloud platform', 'aws', 'gcp', 'oci'},
+    'gcp': {'cloud platform', 'aws', 'azure', 'oci'},
+    'oci': {'cloud platform', 'aws', 'azure', 'gcp'},
+    'kubernetes': {'docker', 'containers', 'oke', 'eks', 'aks'},
+    'docker': {'kubernetes', 'containers'},
+    'containers': {'docker', 'kubernetes'},
+    'terraform': {'ansible', 'iac'},
+    'prometheus': {'grafana', 'opentelemetry'},
+    'grafana': {'prometheus', 'opentelemetry'},
+    'opentelemetry': {'prometheus', 'grafana'},
+    # Enterprise Security
+    'microsoft purview': {'zscaler', 'iam'},
+    'zscaler': {'microsoft purview', 'iam'},
+    'iam': {'microsoft purview', 'zscaler'},
 }
 
 

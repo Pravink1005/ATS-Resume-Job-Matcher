@@ -1,9 +1,14 @@
 class ATSExplanationService:
     def explain(self, r):
-        out = [
+        out = []
+        if r.get('is_gated') and r.get('gate_reasons'):
+            for reason in r['gate_reasons']:
+                out.append(f"Production Safety Gate Enforced: {reason}")
+
+        out.extend([
             'Overall ATS score is calculated from explicit requirement evidence; text similarity is only a weak supporting signal.',
             'Related technologies are not treated as equivalent skills (for example, SQL does not prove CTEs/complex joins, and Power BI does not prove Tableau/Looker).',
-        ]
+        ])
         if r.get('missing_skills'):
             out.append('Skills not explicitly demonstrated: ' + ', '.join(r['missing_skills']) + '.')
         if r.get('related_skill_matches'):

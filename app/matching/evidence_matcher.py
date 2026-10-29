@@ -42,6 +42,17 @@ EVIDENCE_PATTERNS = {
     "problem solving": [r"\bproblem[- ]solving\b", r"\bsolve\s+complex\s+problems\b"],
     "collaboration": [r"\bcollaborat(?:ed|ing|ion)\b", r"\bteam\s+player\b"],
     "leadership": [r"\bleadership\b", r"\bled\s+(?:a|the)?\s*team\b", r"\bmentoring\b", r"\bmentored\b"],
+    # Cloud, DevOps, Observability & Security Evidence
+    "prometheus": [r"\bprometheus\b"],
+    "grafana": [r"\bgrafana\b"],
+    "opentelemetry": [r"\bopentelemetry\b", r"\botel\b", r"\bopen\s+telemetry\b", r"\bdistributed\s+tracing\b"],
+    "zscaler": [r"\bzscaler\b", r"\bzia\b", r"\bzpa\b"],
+    "microsoft purview": [r"\bpurview\b", r"\bmicrosoft\s+purview\b"],
+    "oci": [r"\boci\b", r"\boracle\s+cloud\b"],
+    "iam": [r"\biam\b", r"\bidentity\s+(?:and|&)\s+access\b"],
+    "sre": [r"\bsre\b", r"\bsite\s+reliability\b"],
+    "devops": [r"\bdevops\b"],
+    "containers": [r"\bcontainers?\b", r"\bdocker\b", r"\bcontaineriz(?:ed|ation)\b"],
 }
 
 

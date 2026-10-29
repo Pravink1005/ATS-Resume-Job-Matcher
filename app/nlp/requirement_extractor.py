@@ -53,10 +53,19 @@ SKILL_PATTERNS = [
     ("snowflake", "snowflake"), ("bigquery", "bigquery"), ("redshift", "redshift"),
     # Cloud & DevOps
     ("aws", "aws"), ("azure", "azure"), ("gcp", "gcp"),
+    ("oci", "oci"), ("oracle cloud", "oci"), ("oke", "oke"),
     ("docker", "docker"), ("kubernetes", "kubernetes"), ("k8s", "kubernetes"),
+    ("containers", "containers"), ("containerization", "containers"),
     ("jenkins", "jenkins"), ("git", "git"), ("github", "github"), ("gitlab", "gitlab"),
     ("terraform", "terraform"), ("ansible", "ansible"), ("ci/cd", "ci/cd"),
-    ("linux", "linux"),
+    ("linux", "linux"), ("sre", "sre"), ("devops", "devops"),
+    # Observability & Telemetry
+    ("prometheus", "prometheus"), ("grafana", "grafana"),
+    ("opentelemetry", "opentelemetry"), ("open telemetry", "opentelemetry"), ("otel", "opentelemetry"),
+    ("datadog", "datadog"), ("splunk", "splunk"),
+    # Enterprise Security & Identity
+    ("microsoft purview", "microsoft purview"), ("purview", "microsoft purview"),
+    ("zscaler", "zscaler"), ("iam", "iam"),
     # Big Data & Data Eng
     ("spark", "spark"), ("pyspark", "pyspark"), ("airflow", "airflow"),
     ("kafka", "kafka"), ("dbt", "dbt"), ("etl", "etl"),
@@ -82,6 +91,29 @@ CONCEPT_PATTERNS = [
     ("data pipeline", "data pipeline"), ("data modeling", "data modeling"),
     ("problem solving", "problem solving"), ("team player", "collaboration"),
     ("collaboration", "collaboration"), ("leadership", "leadership"),
+]
+
+
+PREFERRED_HEADERS = [
+    r"preferred\s+(?:qualifications?|skills?|experience|requirements?)",
+    r"nice\s+to\s+have",
+    r"bonus\s+(?:points?|qualifications?)",
+    r"desired\s+(?:qualifications?|skills?|experience)",
+    r"what\s+would\s+make\s+you\s+stand\s+out",
+    r"good\s+to\s+have",
+]
+
+REQUIRED_HEADERS = [
+    r"required\s+(?:qualifications?|skills?|experience|requirements?)",
+    r"minimum\s+(?:qualifications?|requirements?)",
+    r"basic\s+(?:qualifications?|requirements?)",
+    r"must\s+haves?",
+    r"qualifications",
+    r"requirements",
+    r"what\s+you\s+need",
+    r"what\s+you\s+bring",
+    r"key\s+responsibilities",
+    r"responsibilities",
 ]
 
 
@@ -116,13 +148,40 @@ def extract_requirements(text: str):
 
     requirements = []
     seen = set()
-    sentences = _sentences(text)
 
-    for sentence in sentences:
+    active_section_required = True
+    scoped_sentences = []
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        low_line = line.lower()
+        is_header = len(line.split()) <= 8 and (line.endswith(":") or not line.endswith("."))
+        if is_header:
+            if any(re.search(r"\b" + p + r"\b", low_line) for p in PREFERRED_HEADERS):
+                active_section_required = False
+                continue
+            elif any(re.search(r"\b" + p + r"\b", low_line) for p in REQUIRED_HEADERS):
+                active_section_required = True
+                continue
+
+        for s in re.split(r"(?<=[.!?])\s+", line):
+            s_clean = s.strip()
+            if s_clean:
+                req_flag = active_section_required and _required(s_clean)
+                scoped_sentences.append((s_clean, req_flag))
+
+    if not scoped_sentences:
+        scoped_sentences = [(s, _required(s)) for s in _sentences(text)]
+
+    sentences = [s for s, _ in scoped_sentences]
+
+    for sentence, required in scoped_sentences:
         low = sentence.lower()
-        required = _required(sentence)
         # Identify skills present in this sentence
         sentence_skills = []
+        sentence_canons = set()
         suppressed = set()
         if re.search(r"\badvanced\s+sql\b", low):
             suppressed.add("sql")
@@ -130,7 +189,7 @@ def extract_requirements(text: str):
             suppressed.add("excel")
 
         for display, canonical in SKILL_PATTERNS:
-            if canonical in suppressed or canonical in seen:
+            if canonical in suppressed or canonical in seen or canonical in sentence_canons:
                 continue
             if display in ("r programming", "r language"):
                 m = bool(re.search(r"\br\s+(?:programming|language|studio)\b", low))
@@ -140,6 +199,7 @@ def extract_requirements(text: str):
                 m = bool(re.search(r"(?<!\w)" + re.escape(display) + r"(?!\w)", low))
             if m:
                 sentence_skills.append((display, canonical))
+                sentence_canons.add(canonical)
 
         # Build fine-grained alternative groups for skills explicitly in an "or" clause
         skill_alt_map = {}

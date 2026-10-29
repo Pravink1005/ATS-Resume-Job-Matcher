@@ -220,3 +220,53 @@ def test_missing_core_skills_gated_to_moderate_match():
     assert 'terraform' in res['missing_skills']
 
 
+def test_seniority_knockout_gate_enforced():
+    """Verify that candidate with 1.3 yrs experience applying for 7 yr senior role is knocked out."""
+    svc = MatchingService()
+    job_desc = """
+    Data Security Engineer (Microsoft Purview & Zscaler)
+    Terminus Technologies
+    Experience: 7+ years
+    Requirements:
+    Deploy Microsoft Purview DLP and Zscaler ZIA.
+    Build API and REST API integrations using Python.
+    """
+    resume = """
+    Pravin Kumar
+    Junior Data Professional
+    Experience: 1.3 years
+    Skills: Python, API, REST API
+    """
+    res = svc.match(resume, job_desc)
+    assert res['is_gated'] is True
+    assert 'seniority_knockout' in res['applied_gates']
+    assert res['overall_score'] <= 45.0
+    assert res['recommendation'] == 'Low Match'
+    assert 'microsoft purview' in res['missing_skills']
+    assert 'zscaler' in res['missing_skills']
+
+
+def test_section_aware_mandatory_vs_preferred_weighting():
+    """Verify that preferred skills do not unfairly penalize candidates who match mandatory skills."""
+    svc = MatchingService()
+    job_desc = """
+    Job Title: Python ETL Developer
+    Required Qualifications:
+    Proficiency in Python and SQL.
+    Hands-on experience with PostgreSQL and ETL pipelines.
+    Preferred Qualifications:
+    Experience with OCI, Prometheus, and Grafana.
+    """
+    resume = """
+    Pravin Kumar
+    Skills: Python, SQL, PostgreSQL, ETL
+    Experience: 2 years
+    """
+    res = svc.match(resume, job_desc)
+    # Candidate matches all mandatory skills (Python, SQL, PostgreSQL, ETL)
+    # Missing preferred skills (OCI, Prometheus, Grafana) should NOT trigger the technical gate
+    assert res['is_gated'] is False
+    assert res['overall_score'] >= 80.0
+
+
+

@@ -17,8 +17,11 @@ SKILLS = [
     'react', 'next.js', 'vue', 'angular', 'node.js', 'fastapi', 'django', 'flask', 'spring boot',
     'graphql', 'rest api', 'api', 'microservices', 'html', 'css', 'tailwind', 'streamlit',
     # Cloud & DevOps
-    'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'jenkins', 'git', 'github', 'gitlab', 'ci/cd',
-    'terraform', 'ansible', 'linux', 'ubuntu', 'firebase', 'redis', 'elasticsearch'
+    'aws', 'azure', 'gcp', 'oci', 'oke', 'docker', 'kubernetes', 'jenkins', 'git', 'github', 'gitlab', 'ci/cd',
+    'terraform', 'ansible', 'linux', 'ubuntu', 'firebase', 'redis', 'elasticsearch',
+    'grafana', 'prometheus', 'opentelemetry', 'datadog', 'splunk', 'sre', 'devops', 'containers',
+    # Enterprise Security & Identity
+    'microsoft purview', 'purview', 'zscaler', 'iam'
 ]
 
 # Single-letter "r" is intentionally NOT a normal substring skill.
