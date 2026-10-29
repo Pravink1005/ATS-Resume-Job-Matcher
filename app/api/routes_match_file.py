@@ -55,7 +55,9 @@ async def match_file(
             j.job_title,
             result['requirement_analysis'],
             result.get('context_match'),
-            result.get('weighted_scores')
+            result.get('weighted_scores'),
+            result.get('resume_health'),
+            result.get('tailoring_suggestions')
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

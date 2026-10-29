@@ -8,7 +8,8 @@ from app.services.matching_service import MatchingService
 router = APIRouter()
 service = MatchingService()
 
-def build(x, job_title, requirement_analysis=None, context_match=None, weighted_scores=None):
+def build(x, job_title, requirement_analysis=None, context_match=None, weighted_scores=None,
+          resume_health=None, tailoring_suggestions=None):
     arr = [
         'matched_skills', 'missing_skills', 'exact_skill_matches', 'alias_skill_matches',
         'partial_skill_matches', 'related_skill_matches', 'matched_competencies',
@@ -35,7 +36,7 @@ def build(x, job_title, requirement_analysis=None, context_match=None, weighted_
             'context': context_match.get('context_score', 0),
         })
 
-    return {
+    res = {
         'match_id': x.id,
         'resume_id': x.resume_id,
         'job_id': x.job_id,
@@ -54,6 +55,11 @@ def build(x, job_title, requirement_analysis=None, context_match=None, weighted_
         'requirement_analysis': requirement_analysis,
         'context_match': context_match,
     }
+    if resume_health is not None:
+        res['resume_health'] = resume_health
+    if tailoring_suggestions is not None:
+        res['tailoring_suggestions'] = tailoring_suggestions
+    return res
 
 @router.post('/match')
 def create_match(req: MatchRequest, db: Session = Depends(get_db)):
@@ -89,7 +95,15 @@ def create_match(req: MatchRequest, db: Session = Depends(get_db)):
         ]}
     }
     x = MatchRepository.create(db, payload)
-    return build(x, j.job_title, result['requirement_analysis'], result.get('context_match'), result.get('weighted_scores'))
+    return build(
+        x,
+        j.job_title,
+        result['requirement_analysis'],
+        result.get('context_match'),
+        result.get('weighted_scores'),
+        result.get('resume_health'),
+        result.get('tailoring_suggestions')
+    )
 
 @router.get('/match/{match_id}')
 def get_match(match_id: int, db: Session = Depends(get_db)):

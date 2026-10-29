@@ -95,6 +95,7 @@ class JobRecommenderService:
                     'requirement_analysis': match_res.get('requirement_analysis', []),
                     'context_match': match_res.get('context_match', {}),
                     'explanations': match_res.get('explanations', []),
+                    'tailoring_suggestions': match_res.get('tailoring_suggestions', {}),
                 })
             except Exception as e:
                 logger.warning('Failed to match job %s: %s', job.get('job_id'), e)

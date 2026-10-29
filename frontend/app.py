@@ -94,6 +94,28 @@ def build_docx_report(data, resume_name):
     for explanation in data.get('explanations', []):
         document.add_paragraph(explanation, style='List Bullet')
 
+    health = data.get('resume_health')
+    if health:
+        document.add_heading('ATS Resume Health & Parseability', level=1)
+        document.add_paragraph(
+            f"Health score: {health.get('health_score', 0)}/100 (Grade: {health.get('grade', 'N/A')})\n"
+            f"Word count: {health.get('word_count', 0)} words (~{health.get('page_estimate', 1)} page(s))\n"
+            f"Quantifiable metrics detected: {len(health.get('metrics_found', []))}\n"
+            f"Action verbs detected: {len(health.get('action_verbs_found', []))}"
+        )
+
+    tailoring = data.get('tailoring_suggestions')
+    if tailoring:
+        document.add_heading('Tailored Professional Summary', level=1)
+        document.add_paragraph(tailoring.get('tailored_summary', ''))
+
+        document.add_heading('STAR Method Bullet Points (Tailored for Missing Skills)', level=1)
+        for bullet in tailoring.get('star_bullet_points', []):
+            document.add_paragraph(
+                f"[{bullet.get('skill', '')}] {bullet.get('bullet_point', '')}",
+                style='List Bullet'
+            )
+
     output = BytesIO()
     document.save(output)
     return output.getvalue()
@@ -316,7 +338,7 @@ if main_nav == '🎯 Match Specific Job':
                     use_container_width=True,
                 )
 
-        tabs = st.tabs(['Overview', 'Requirements', 'Evidence', 'ATS notes'])
+        tabs = st.tabs(['Overview', '🎯 AI Resume Tailor', '🩺 ATS Health Check', 'Requirements', 'Evidence', 'ATS notes'])
         with tabs[0]:
             st.subheader('Score breakdown')
             labels = [
@@ -349,6 +371,145 @@ if main_nav == '🎯 Match Specific Job':
                 st.write('**Education:** ' + status_label(data.get('education_status')))
 
         with tabs[1]:
+            st.subheader('🎯 AI Resume Tailor & Bullet Optimizer')
+            st.caption('Tailor your resume specifically for this target role to maximize ATS ranking and interview callbacks.')
+
+            tailoring = data.get('tailoring_suggestions', {})
+            if not tailoring:
+                st.info('Tailoring suggestions are not available for this match.')
+            else:
+                target_title = tailoring.get('target_title', 'Target Role')
+                st.markdown(f"### Target Role: **{target_title}**")
+
+                # 1. Tailored Professional Summary
+                st.markdown("#### 1. Tailored Professional Summary")
+                st.write("Replace or update your resume summary section with this role-aligned statement:")
+                st.code(tailoring.get('tailored_summary', ''), language='text')
+
+                # 2. STAR-Method Bullet Points for Missing Skills
+                st.markdown("#### 2. High-Impact STAR Bullet Points (Tailored for Missing Skills)")
+                st.write(
+                    "Insert these production-ready bullet points under your work experience or projects. "
+                    "Each bullet is engineered using the **STAR formula** (*Action Verb + Context + Measurable Impact*):"
+                )
+
+                star_bullets = tailoring.get('star_bullet_points', [])
+                if star_bullets:
+                    for idx, bullet in enumerate(star_bullets, start=1):
+                        with st.container(border=True):
+                            b_head1, b_head2 = st.columns([3, 1])
+                            b_head1.markdown(f"**#{idx} Skill Focus:** `{bullet.get('skill', '')}`")
+                            b_head2.caption(f"⚡ {bullet.get('formula', 'STAR Method')}")
+                            st.code(bullet.get('bullet_point', ''), language='text')
+                else:
+                    st.success("🎉 You matched all core skills! No critical skill bullet points needed.")
+
+                # 3. Categorized ATS Skills Section
+                st.markdown("#### 3. Optimized ATS Skills Block")
+                st.write("Ensure ATS keyword extractors parse all required skills by updating your skills block:")
+                skills_sec = tailoring.get('skills_section', {})
+                st.code(skills_sec.get('formatted_copy_paste', ''), language='text')
+
+                # 4. Placement Strategy
+                st.markdown("#### 4. Keyword Placement Strategy")
+                for step in tailoring.get('placement_strategy', []):
+                    with st.expander(f"📍 {step.get('section', 'Section')}: {step.get('action', '')}", expanded=False):
+                        st.write(f"**Why this matters:** {step.get('reason', '')}")
+
+        with tabs[2]:
+            st.subheader('🩺 ATS Resume Health & Parseability Audit')
+            st.caption('Evaluates how cleanly applicant tracking systems parse your contact information, formatting, metrics, and active verbs.')
+
+            health = data.get('resume_health', {})
+            if not health:
+                st.info('Resume health audit is not available for this record.')
+            else:
+                h_col1, h_col2, h_col3 = st.columns([1, 2, 2])
+                score = health.get('health_score', 0)
+                grade = health.get('grade', 'N/A')
+
+                with h_col1:
+                    st.metric('Parseability Health', f"{score}/100", f"Grade {grade}")
+                    st.progress(min(1.0, max(0.0, score / 100.0)))
+
+                with h_col2:
+                    st.write("**Diagnostics Summary:**")
+                    st.write(f"• Word count: **{health.get('word_count', 0)}** words (~{health.get('page_estimate', 1)} page(s))")
+                    st.write(f"• Quantifiable metrics detected: **{len(health.get('metrics_found', []))}**")
+                    st.write(f"• Strong action verbs detected: **{len(health.get('action_verbs_found', []))}**")
+                    weak_phr = health.get('weak_phrases_found', [])
+                    if weak_phr:
+                        st.write(f"• ⚠️ Passive phrases flagged: **{len(weak_phr)}**")
+                    else:
+                        st.write("• ✅ Passive phrases flagged: **0**")
+
+                with h_col3:
+                    st.write("**Score Breakdown:**")
+                    bd = health.get('score_breakdown', {})
+                    st.write(f"• Contact Info: **{bd.get('contact_info', 0)}/25**")
+                    st.write(f"• Section Structure: **{bd.get('section_structure', 0)}/30**")
+                    st.write(f"• Measurable Metrics: **{bd.get('quantifiable_metrics', 0)}/25**")
+                    st.write(f"• Action Verb Strength: **{bd.get('action_verb_strength', 0)}/20**")
+
+                st.divider()
+
+                # Contact Information Detected
+                st.markdown("#### 📇 Contact Information Verification")
+                contact = health.get('contact_info', {})
+                c1, c2, c3, c4 = st.columns(4)
+                c1.write(f"**Email:** {'✅ ' + contact['email'] if contact.get('email') else '❌ Missing'}")
+                c2.write(f"**Phone:** {'✅ ' + contact['phone'] if contact.get('phone') else '❌ Missing'}")
+                c3.write(f"**LinkedIn:** {'✅ Yes' if contact.get('linkedin') else '⚠️ Missing'}")
+                c4.write(f"**GitHub / Web:** {'✅ Yes' if contact.get('github') or contact.get('portfolio') else '⚪ Optional'}")
+
+                # Standard Section Headers
+                st.markdown("#### 📑 Standard ATS Section Headers")
+                s_detected = health.get('sections_detected', [])
+                sec_cols = st.columns(6)
+                all_core = ['experience', 'education', 'skills', 'projects', 'summary', 'certifications']
+                for c, s_name in zip(sec_cols, all_core):
+                    is_present = s_name in s_detected
+                    c.write(f"{'✅' if is_present else '⚪'} {s_name.title()}")
+
+                # Quantifiable Metrics & Action Verbs
+                st.markdown("#### 📈 Measurable Impact & Action Verbs")
+                m_left, m_right = st.columns(2, gap='large')
+                with m_left:
+                    st.write("**Quantifiable Metrics Detected:**")
+                    metrics = health.get('metrics_found', [])
+                    if metrics:
+                        st.write(", ".join(f"`{m}`" for m in metrics))
+                    else:
+                        st.warning("No measurable metrics detected! Add percentages, dollar savings, or scale numbers.")
+                with m_right:
+                    st.write("**Strong Action Verbs Used:**")
+                    verbs = health.get('action_verbs_found', [])
+                    if verbs:
+                        st.write(", ".join(f"`{v}`" for v in verbs[:10]))
+                    else:
+                        st.info("No strong action verbs identified.")
+
+                # Actionable Checklist
+                st.markdown("#### 📋 Actionable ATS Health Checklist")
+                checklist = health.get('checklist', {})
+
+                crit_list = checklist.get('critical', [])
+                if crit_list:
+                    for crit in crit_list:
+                        st.error(f"🔴 **Critical:** {crit}")
+
+                warn_list = checklist.get('warnings', [])
+                if warn_list:
+                    for warn in warn_list:
+                        st.warning(f"🟡 **Improvement:** {warn}")
+
+                pass_list = checklist.get('passed', [])
+                if pass_list:
+                    with st.expander(f"🟢 Passed Standards ({len(pass_list)})", expanded=False):
+                        for p in pass_list:
+                            st.write(f"✅ {p}")
+
+        with tabs[3]:
             requirements = data.get('requirement_analysis', [])
             st.subheader('Requirement evidence')
             if requirements:
@@ -364,7 +525,7 @@ if main_nav == '🎯 Match Specific Job':
             else:
                 st.info('Requirement-level evidence is not included in this API response yet.')
 
-        with tabs[2]:
+        with tabs[4]:
             left, right = st.columns(2, gap='large')
             with left:
                 st.subheader('Competencies')
@@ -378,7 +539,7 @@ if main_nav == '🎯 Match Specific Job':
             st.write(f'{float(data.get("tfidf_similarity", 0)):.1%}')
             st.caption('Similarity supports the result but does not prove that a missing skill is present.')
 
-        with tabs[3]:
+        with tabs[5]:
             st.subheader('ATS analysis')
             explanations = data.get('explanations', [])
             if explanations:
@@ -536,3 +697,10 @@ elif main_nav == '🚀 Auto-Job Recommender (Find Best Matching Jobs)':
                     with b_col2:
                         with st.expander('📄 View Job Description Preview'):
                             st.text(r.get('description', '')[:1200] + ('...' if len(r.get('description', '')) > 1200 else ''))
+
+                    tailor_info = r.get('tailoring_suggestions')
+                    if tailor_info and tailor_info.get('star_bullet_points'):
+                        with st.expander('🎯 Tailored Resume Bullet Points for This Job', expanded=False):
+                            st.caption(f"Role target: **{tailor_info.get('target_title', r['title'])}**")
+                            for b in tailor_info.get('star_bullet_points', [])[:3]:
+                                st.code(f"[{b.get('skill')}] {b.get('bullet_point')}", language='text')

@@ -12,6 +12,8 @@ from app.matching.tfidf_matcher import TFIDFMatcher
 from app.matching.context_matcher import match_context
 from app.scoring.scoring_engine import ScoringEngine
 from app.services.ats_explanation_service import ATSExplanationService
+from app.services.resume_health_service import ResumeHealthService
+from app.services.resume_tailor_service import ResumeTailorService
 
 
 class MatchingService:
@@ -26,6 +28,8 @@ class MatchingService:
         self.tfidf = TFIDFMatcher()
         self.scoring = ScoringEngine()
         self.explainer = ATSExplanationService()
+        self.health_service = ResumeHealthService()
+        self.tailor_service = ResumeTailorService()
 
     def extract_resume_data(self, text):
         if not isinstance(text, str):
@@ -145,4 +149,10 @@ class MatchingService:
             'context_match': context,
         }
         result['explanations'] = self.explainer.explain(result)
+        result['resume_health'] = self.health_service.audit(resume_text)
+        result['tailoring_suggestions'] = self.tailor_service.generate_tailored_recommendations(
+            resume_text=resume_text,
+            job_description=job_text,
+            match_result=result
+        )
         return result
