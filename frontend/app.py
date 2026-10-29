@@ -218,8 +218,9 @@ if main_nav == '🎯 Match Specific Job':
                         height=160,
                         help='Description auto-loaded from Supabase database. You can adjust it before analyzing if needed.',
                     )
+                    desc_type = "🟢 Full Description" if chosen_job.get('has_full_description') else "📋 Brief Summary (enriched with database skills & experience)"
                     st.caption(
-                        f"🏢 **{chosen_job['company']}** | 📍 **{chosen_job['location']}** | 📝 {len(jd.split()):,} words"
+                        f"🏢 **{chosen_job['company']}** | 📍 **{chosen_job['location']}** | 📝 {len(jd.split()):,} words | {desc_type}"
                     )
                     if chosen_job.get('link'):
                         st.markdown(f"[🔗 View / Apply on LinkedIn]({chosen_job['link']})")
@@ -672,7 +673,8 @@ elif main_nav == '🚀 Auto-Job Recommender (Find Best Matching Jobs)':
                     head_col1, head_col2 = st.columns([3, 1])
                     with head_col1:
                         st.markdown(f"### #{idx} {r['title']}")
-                        st.markdown(f"🏢 **{r['company']}** | 📍 {r['location']} | 🕒 *{r.get('posted_label', 'Recent')}*")
+                        desc_badge = '🟢 Full JD' if r.get('has_full_description') else '📋 Brief Summary'
+                        st.markdown(f"🏢 **{r['company']}** | 📍 {r['location']} | 🕒 *{r.get('posted_label', 'Recent')}* | {desc_badge}")
                     with head_col2:
                         st.markdown(f"### {score_badge} {score:.1f}%")
                         st.caption(f"{r['recommendation']}")

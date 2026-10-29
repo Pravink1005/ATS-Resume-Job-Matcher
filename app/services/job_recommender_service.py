@@ -82,6 +82,7 @@ class JobRecommenderService:
                     'link': job.get('link') or '',
                     'created_at': job.get('created_at') or '',
                     'posted_label': job.get('posted_label') or 'Recent',
+                    'has_full_description': job.get('has_full_description', False),
                     'overall_score': match_res['overall_score'],
                     'recommendation': match_res['recommendation'],
                     'matched_skills': match_res.get('matched_skills', []),

@@ -198,7 +198,7 @@ class SupabaseJobService:
         location = ', '.join(location_parts) if location_parts else 'Location not specified'
 
         raw_desc = (row.get('full_description') or '').strip()
-        has_rich_desc = bool(raw_desc and raw_desc.lower() != 'not specified' and len(raw_desc) > 50)
+        has_rich_desc = bool(raw_desc and raw_desc.lower() != 'not specified' and len(raw_desc) > 150)
 
         min_exp = row.get('min_experience_years')
         max_exp = row.get('max_experience_years')
@@ -207,8 +207,21 @@ class SupabaseJobService:
         created_at = row.get('created_at') or ''
         link = row.get('link') or ''
 
-        if has_rich_desc:
+        if raw_desc and raw_desc.lower() != 'not specified':
             clean_desc = raw_desc
+            # Enrich short or teaser descriptions with structured database columns if missing
+            extra_info = []
+            if min_exp and str(min_exp).lower() != 'not specified' and f'{min_exp} year' not in clean_desc.lower() and f'{min_exp}+' not in clean_desc:
+                extra_info.append(f"Required Experience: {min_exp} years")
+            if skills and str(skills).lower() != 'not specified':
+                # Check if skills are explicitly in the text
+                missing_sk = [s.strip() for s in str(skills).split(',') if s.strip() and s.strip().lower() not in clean_desc.lower()]
+                if missing_sk:
+                    extra_info.append(f"Required Skills: {skills}")
+            if degree and str(degree).lower() != 'not specified' and str(degree).lower() not in clean_desc.lower():
+                extra_info.append(f"Required Degree: {degree}")
+            if extra_info:
+                clean_desc = clean_desc + "\n\n" + "\n".join(extra_info)
         else:
             sections = [f"Job Title: {title}", f"Company: {company}", f"Location: {location}"]
             if min_exp and str(min_exp).lower() != 'not specified':
@@ -221,6 +234,7 @@ class SupabaseJobService:
 
         job_id = row.get('job_id') or ''
         short_id = job_id[-8:] if len(job_id) > 8 else job_id
+        icon = '📄' if has_rich_desc else '📋'
 
         return {
             'job_id': job_id,
@@ -237,6 +251,6 @@ class SupabaseJobService:
             'created_at': created_at,
             'posted_label': format_relative_time(created_at),
             'link': link,
-            'label': f"{title} @ {company} ({location}) [{short_id}]",
+            'label': f"{icon} {title} @ {company} ({location}) [{short_id}]",
         }
 
