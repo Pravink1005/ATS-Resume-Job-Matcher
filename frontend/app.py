@@ -1,4 +1,5 @@
-from io import BytesIO
+import csv
+from io import BytesIO, StringIO
 import os
 
 import requests
@@ -119,6 +120,59 @@ def build_docx_report(data, resume_name):
     output = BytesIO()
     document.save(output)
     return output.getvalue()
+
+
+def build_recommendations_csv(recommendations: list) -> str:
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow([
+        'Rank',
+        'Job Title',
+        'Company',
+        'Location',
+        'ATS Match Score',
+        'Recommendation Fit',
+        'Matched Skills',
+        'Missing Skills',
+        'Candidate Experience (Years)',
+        'Required Experience (Years)',
+        'Experience Status',
+        'Time Posted',
+        'Application URL',
+        'Application Status',
+        'Notes'
+    ])
+    for idx, r in enumerate(recommendations, start=1):
+        matched_str = ', '.join(r.get('matched_skills', []))
+        missing_str = ', '.join(r.get('missing_skills', []))
+        writer.writerow([
+            idx,
+            r.get('title', 'Unknown Title'),
+            r.get('company', 'Unknown Company'),
+            r.get('location', 'Location Not Specified'),
+            f"{float(r.get('overall_score', 0)):.1f}%",
+            r.get('recommendation', 'Not Available'),
+            matched_str,
+            missing_str,
+            f"{float(r.get('candidate_experience', 0)):.1f}",
+            f"{float(r.get('required_experience', 0)):.1f}",
+            r.get('experience_status', ''),
+            r.get('posted_label', 'Recent'),
+            r.get('link', ''),
+            'To Apply',
+            ''
+        ])
+    return output.getvalue()
+
+
+if st.session_state.get('pending_inspect_job'):
+    target_job = st.session_state.pop('pending_inspect_job')
+    st.session_state['result'] = target_job
+    st.session_state['active_chosen_job_id'] = target_job.get('job_id')
+    st.session_state['jd_supabase_text'] = target_job.get('description', '')
+    st.session_state['main_nav_mode'] = '🎯 Match Specific Job'
+    if not st.session_state.get('resume_name') and st.session_state.get('saved_resume_tuple'):
+        st.session_state['resume_name'] = st.session_state['saved_resume_tuple'][0]
 
 
 st.markdown(
@@ -654,12 +708,22 @@ elif main_nav == '🚀 Auto-Job Recommender (Find Best Matching Jobs)':
         total_matched = rec_data.get('total_matched', 0)
 
         st.divider()
-        m_col1, m_col2, m_col3 = st.columns(3)
+        m_col1, m_col2, m_col3, m_col4 = st.columns([1, 1, 1, 1.4])
         m_col1.metric('Jobs Scanned', f'{total_scanned}')
         m_col2.metric('Matches Found', f'{total_matched}')
         if recs:
             top_score = recs[0]['overall_score']
             m_col3.metric('Top ATS Match', f'{top_score:.1f}%')
+            with m_col4:
+                st.write('')
+                st.download_button(
+                    label='📥 Export to CSV (Job Tracker)',
+                    data=build_recommendations_csv(recs),
+                    file_name='ATS_Job_Application_Tracker.csv',
+                    mime='text/csv',
+                    use_container_width=True,
+                    help='Download top ranked job matches as a spreadsheet tracker with links and application statuses.'
+                )
 
         if not recs:
             st.info('No jobs met the selected experience or time criteria. Try selecting "All Experience Levels" or "All Time".')
@@ -690,14 +754,27 @@ elif main_nav == '🚀 Auto-Job Recommender (Find Best Matching Jobs)':
                     st.write(f"✅ **Matched Skills:** {matched_skills_str}")
                     st.write(f"⚠️ **Missing Skills:** {missing_skills_str}")
 
-                    b_col1, b_col2 = st.columns([1, 2])
+                    b_col1, b_col2, b_col3 = st.columns([1.2, 1.2, 1.2])
                     with b_col1:
+                        inspect_btn = st.button(
+                            '🔍 Inspect Full Match',
+                            key=f'inspect_rec_{r["job_id"]}_{idx}',
+                            use_container_width=True,
+                            type='secondary',
+                            help='Open complete requirement breakdown, radar chart, ATS health, and report download.'
+                        )
+                        if inspect_btn:
+                            st.session_state['pending_inspect_job'] = r
+                            st.rerun()
+
+                    with b_col2:
                         if r.get('link'):
-                            st.link_button('🔗 Apply / View Job Posting', r['link'], use_container_width=True)
+                            st.link_button('🔗 Apply on LinkedIn', r['link'], use_container_width=True)
                         else:
                             st.caption('No direct URL available')
-                    with b_col2:
-                        with st.expander('📄 View Job Description Preview'):
+
+                    with b_col3:
+                        with st.expander('📄 Description Preview'):
                             st.text(r.get('description', '')[:1200] + ('...' if len(r.get('description', '')) > 1200 else ''))
 
                     tailor_info = r.get('tailoring_suggestions')

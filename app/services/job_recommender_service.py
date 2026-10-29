@@ -74,7 +74,8 @@ class JobRecommenderService:
                 if not matches_experience_level(req_exp, experience_level):
                     continue
 
-                scored.append({
+                item = {
+                    **match_res,
                     'job_id': job['job_id'],
                     'title': job['title'],
                     'company': job['company'],
@@ -83,21 +84,10 @@ class JobRecommenderService:
                     'created_at': job.get('created_at') or '',
                     'posted_label': job.get('posted_label') or 'Recent',
                     'has_full_description': job.get('has_full_description', False),
-                    'overall_score': match_res['overall_score'],
-                    'recommendation': match_res['recommendation'],
-                    'matched_skills': match_res.get('matched_skills', []),
-                    'missing_skills': match_res.get('missing_skills', []),
-                    'candidate_experience': match_res.get('candidate_experience', 0.0),
                     'required_experience': req_exp,
-                    'experience_gap': match_res.get('experience_gap', 0.0),
-                    'experience_status': match_res.get('experience_status', ''),
                     'description': job['description'],
-                    'component_scores': match_res.get('component_scores', {}),
-                    'requirement_analysis': match_res.get('requirement_analysis', []),
-                    'context_match': match_res.get('context_match', {}),
-                    'explanations': match_res.get('explanations', []),
-                    'tailoring_suggestions': match_res.get('tailoring_suggestions', {}),
-                })
+                }
+                scored.append(item)
             except Exception as e:
                 logger.warning('Failed to match job %s: %s', job.get('job_id'), e)
                 continue
