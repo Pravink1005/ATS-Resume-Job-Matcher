@@ -13,6 +13,28 @@ def test_experience_date_range_present():
     assert extract_experience(text) > 0
 
 
+def test_numeric_date_ranges_and_hands_on_experience():
+    text = """
+    PRAVIN KUMAR A
+    PROFESSIONAL SUMMARY
+    Data professional with 1+ year of hands-on experience building, monitoring, and optimizing ETL/ELT pipelines
+
+    PROFESSIONAL EXPERIENCE
+    Junior Process Associate | Aggregate Intelligence 07/2025 – 07/2026
+    • Monitored and executed Python-based ETL jobs
+    Data Analytics Intern | HCL Technologies 12/2024 – 02/2025
+    • Contributed to an AI-powered Project Cost Estimation system
+
+    EDUCATION
+    M.Sc. Data Science and Business Analysis 08/2023 – 05/2025
+    B.Sc. Information Technology 08/2020 – 05/2023
+    """
+    exp = extract_experience(text)
+    # 07/2025 - 07/2026 (13 mos) + 12/2024 - 02/2025 (3 mos) = 16 mos = 1.33 yrs -> formats as 1.3 yrs
+    assert exp >= 1.3
+    assert f"{exp:.1f}" == "1.3"
+
+
 def test_r_is_not_false_positive():
     skills = extract_skills("Bachelor degree in Information Technology. Python, SQL, Excel, Power BI.")
     assert 'r' not in skills

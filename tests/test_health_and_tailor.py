@@ -119,3 +119,4 @@ def test_api_resume_tailor_endpoint():
     assert 'tailored_summary' in data
     assert 'star_bullet_points' in data
     assert len(data['star_bullet_points']) >= 2
+

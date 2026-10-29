@@ -169,7 +169,7 @@ def extract_requirements(text: str):
                 seen.add(canonical)
 
     # Education and experience are kept as separate structured requirements.
-    exp = re.search(r"(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:professional\s+)?(?:data|analytics|bi|relevant|work)?\s*experience", text, re.I)
+    exp = re.search(r"(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:hands[- ]on\s+|professional\s+)?(?:data|analytics|bi|relevant|work)?\s*experience", text, re.I)
     if not exp:
         exp = re.search(r"(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\b", text, re.I)
     if exp:

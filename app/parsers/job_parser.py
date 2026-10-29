@@ -61,7 +61,8 @@ class JobDescriptionParser:
 
     def _experience(self, text):
         patterns = [
-            r'(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\s+(?:of\s+)?experience',
+            r'(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:hands[- ]on\s+|professional\s+|relevant\s+|industry\s+|work\s+)?experience',
+            r'(\d+(?:\.\d+)?)\s*(?:-|–|to)\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?)\s+(?:of\s+)?(?:hands[- ]on\s+|professional\s+|relevant\s+|industry\s+|work\s+)?experience',
             r'(?:experience|exp)\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)',
             r'(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\b'
         ]
