@@ -1,93 +1,138 @@
-# ResumeMatch ATS
+# 🚀 ResumeMatch ATS
 
 <p align="center">
-  <img src="docs/assets/supabase_role_selector.png" alt="ResumeMatch ATS Interface" width="900" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <img src="docs/assets/hero_banner.svg" alt="ResumeMatch ATS Hero Banner" width="100%" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);" />
 </p>
 
 <p align="center">
-  <strong>Intelligent, Explainable Resume-to-Job Matching & AI Career Platform</strong><br>
-  Built with conservative evidence-based matching, dynamic weight re-balancing, live Supabase job discovery across 6,200+ roles, automated resume health auditing, and targeted AI resume tailoring.
+  <strong>Next-Generation Explainable ATS Intelligence &amp; AI Career Optimization Platform</strong><br>
+  Engineered with strict evidence-based requirement matching, production knockout safety gates, section-aware qualification weighting, automated resume health auditing, live discovery across 6,200+ roles, and targeted STAR-formula AI tailoring.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white" alt="Python Version" />
   <img src="https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=flat&logo=streamlit&logoColor=white" alt="Streamlit" />
-  <img src="https://img.shields.io/badge/Supabase-PostgREST-3ECF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Tests-38%20Passing%20(100%25)-brightgreen?style=flat&logo=pytest&logoColor=white" alt="Tests" />
+  <img src="https://img.shields.io/badge/Supabase-Live%20Jobs%20(6%2C200+)-3ECF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Tests-41%20Passing%20(100%25)-brightgreen?style=flat&logo=pytest&logoColor=white" alt="Tests" />
+  <img src="https://img.shields.io/badge/Production-Safety%20Gated-blueviolet?style=flat" alt="Safety Gated" />
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat" alt="License" />
 </p>
 
 ---
 
-## Table of Contents
+## 📌 Table of Contents
 
-- [Overview](#overview)
-- [Why ResumeMatch ATS Helps](#why-resumematch-ats-helps)
-  - [For Candidates & Job Seekers](#for-candidates--job-seekers)
-  - [For Recruiters & Hiring Managers](#for-recruiters--hiring-managers)
-- [Key Features](#key-features)
+- [🌟 Overview](#-overview)
+- [✨ Why ResumeMatch ATS is Best-In-Class](#-why-resumematch-ats-is-best-in-class)
+  - [🎯 For Candidates & Job Seekers](#-for-candidates--job-seekers)
+  - [🏢 For Recruiters & Talent Acquisition](#-for-recruiters--talent-acquisition)
+- [🖥️ Modern SaaS User Interface](#-modern-saas-user-interface)
+- [🛡️ Production Safety & Recruiter Knockout Architecture](#-production-safety--recruiter-knockout-architecture)
+  - [1. Seniority Shortfall Knockout Gate](#1-seniority-shortfall-knockout-gate)
+  - [2. Section-Aware Mandatory vs. Preferred Weighting](#2-section-aware-mandatory-vs-preferred-weighting)
+  - [3. Core Technical Qualification Gate](#3-core-technical-qualification-gate)
+  - [4. Incomplete Job Description Guard](#4-incomplete-job-description-guard)
+- [⚡ Key Platform Capabilities](#-key-platform-capabilities)
   - [1. Dual Matching Modes](#1-dual-matching-modes)
   - [2. 1-Click Deep Match Inspection](#2-1-click-deep-match-inspection)
-  - [3. CSV Job Application Tracker](#3-csv-job-application-tracker)
-  - [4. 🩺 ATS Resume Health Check & Audit](#4--ats-resume-health-check--audit)
-  - [5. 🎯 AI Resume Tailor & Bullet Optimizer](#5--ai-resume-tailor--bullet-optimizer)
-  - [6. Accurate Candidate Experience Engine](#6-accurate-candidate-experience-engine)
-  - [7. Supabase Description Enrichment](#7-supabase-description-enrichment)
-- [Scoring Engine & Math](#scoring-engine--math)
-  - [Dynamic Weight Re-balancing](#dynamic-weight-re-balancing)
-  - [Calibrated TF-IDF Curve](#calibrated-tf-idf-curve)
-  - [Score Breakdown](#score-breakdown)
-- [System Architecture](#system-architecture)
-- [Quick Start](#quick-start)
+  - [3. 📊 CSV Job Application Tracker (Google Sheets / Excel)](#3--csv-job-application-tracker-google-sheets--excel)
+  - [4. 🎯 AI Resume Tailor & STAR Accomplishment Generator](#4--ai-resume-tailor--star-accomplishment-generator)
+  - [5. 🩺 ATS Resume Health Check & Parseability Audit](#5--ats-resume-health-check--parseability-audit)
+  - [6. ⏱️ Accurate Candidate Experience Engine](#6-️-accurate-candidate-experience-engine)
+  - [7. 🌐 Enterprise Cloud, DevOps & Security Taxonomy](#7--enterprise-cloud-devops--security-taxonomy)
+- [📐 Scoring Engine Mathematical Architecture](#-scoring-engine-mathematical-architecture)
+  - [Dynamic Weight Re-balancing Math](#dynamic-weight-re-balancing-math)
+  - [Calibrated TF-IDF Logistic Sigmoid Curve](#calibrated-tf-idf-logistic-sigmoid-curve)
+- [🏗️ System Architecture & Workflow Pipeline](#-system-architecture--workflow-pipeline)
+- [🚀 Quick Start Guide](#-quick-start-guide)
   - [Prerequisites](#prerequisites)
-  - [Installation & Setup](#installation--setup)
-  - [Running the Services](#running-the-services)
-  - [Docker Compose](#docker-compose)
-- [API Reference](#api-reference)
-- [Testing & Quality Assurance](#testing--quality-assurance)
-- [Project Directory Structure](#project-directory-structure)
+  - [Installation & Virtual Environment](#installation--virtual-environment)
+  - [Starting the Services](#starting-the-services)
+  - [Docker Compose Deployment](#docker-compose-deployment)
+- [🔌 REST API Reference](#-rest-api-reference)
+- [🧪 Automated Test Suite (41 Tests, 100% Green)](#-automated-test-suite-41-tests-100-green)
+- [📁 Project Directory Structure](#-project-directory-structure)
+- [📄 License](#-license)
 
 ---
 
-## Overview
+## 🌟 Overview
 
-Modern Applicant Tracking Systems (ATS) are notorious for being black boxes that reject qualified candidates over minor formatting discrepancies, unstated requirements, or strict keyword matching. Conversely, simplistic keyword-stuffing tools artificially inflate resume scores without verifying actual candidate capabilities.
+Modern Applicant Tracking Systems are notorious for being opaque black boxes that reject qualified candidates over minor formatting discrepancies, unstated requirements, or naive keyword matching. Conversely, generic resume-matching tools inflate match percentages up to 95% on senior roles without checking whether a candidate actually possesses the required years of experience or core qualifications.
 
-**ResumeMatch ATS** solves both sides of this problem. It is an end-to-end, explainable career discovery and evaluation platform that:
-1. **Parses Resumes Honestly**: Validates real file headers (magic bytes), extracts exact career tenure across overlapping date intervals, and isolates real technical skills without false positives (e.g., distinguishing the R programming language from common vocabulary).
-2. **Evaluates Job Descriptions Fairly**: Dynamically re-balances category weights so candidates are not penalized for unstated job criteria (such as degree requirements or generic competencies).
-3. **Discovers Live Tech Roles**: Connects directly to a live Supabase database holding **6,200+ active job openings**, automatically enriching brief job summaries and ranking the top matching opportunities.
-4. **Empowers Candidates with AI Tailoring**: Audits parseability health (0–100 score + Grade A–D), generates tailored professional summaries, and crafts production-ready **STAR-formula bullet points** addressing missing skills.
+**ResumeMatch ATS** eliminates both problems. It provides an objective, transparent, and recruiter-accurate evaluation system that:
+1. **Parses Resumes Honestly**: Validates binary magic-byte headers, extracts exact career tenure across overlapping date intervals, and isolates real technical skills without false positives.
+2. **Enforces Production Knockout Gates**: Automatically knocks out candidates with severe seniority deficits (e.g. 1-year junior applying for a 7-year Staff role) to ensure real-world hiring accuracy.
+3. **Prioritizes Section-Aware Requirements**: Distinguishes mandatory *"Must-Have"* qualifications from *"Nice-to-Have / Preferred"* bonus skills, weighting them at an $85\% / 15\%$ ratio.
+4. **Discovers Live Roles Across 6,200+ Openings**: Connects live to a cloud database holding 6,200+ verified positions, ranking opportunities by true algorithmic fit.
+5. **Empowers Candidates with Actionable AI Tailoring**: Audits parseability health (0–100 score + Grade A–D), generates tailored professional summaries, and crafts production-ready **STAR-formula accomplishment bullet points**.
 
 ---
 
-## Why ResumeMatch ATS Helps
+## ✨ Why ResumeMatch ATS is Best-In-Class
 
-### For Candidates & Job Seekers
+<p align="center">
+  <img src="docs/assets/ats_match_dashboard.svg" alt="ResumeMatch ATS Modern Dashboard Preview" width="100%" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);" />
+</p>
+
+### 🎯 For Candidates & Job Seekers
 
 | Feature | The Problem in Standard ATS | How ResumeMatch ATS Solves It |
 | :--- | :--- | :--- |
-| **Tenure Parsing** | Discards numeric dates (`07/2025–07/2026`) or sums to `0.0 yrs`, falsely triggering hard experience rejections. | Employs boundary-safe header detection, dual date formats (`MM/YYYY` and named months), inclusive month math, and explicit tenure extraction (e.g., `1+ year of hands-on experience` correctly yields **1.3 yrs**). |
-| **ATS Black Hole** | Candidates receive generic rejection emails with zero feedback on why they were filtered out. | Provides granular, explainable evidence: exactly which skills matched, which were missing, education relevance, experience gap, and a radar chart. |
-| **Missing Skill Gaps** | Knowing you lack a skill (e.g., Docker or AWS) doesn't tell you how to represent your experience effectively. | Built-in **AI Resume Tailor** generates tailored STAR bullet points (Situation, Task, Action, Result) targeting those specific missing skills for your target role. |
-| **Application Fatigue** | Applying to hundreds of jobs manually without tracking results leads to burnout. | Features **1-Click Deep Match** for instant drill-down and a **CSV Application Tracker** that exports ranked roles with direct LinkedIn apply URLs into Google Sheets/Excel. |
-| **Formatting Errors** | Hidden contact errors, non-standard section headers, or weak action verbs get resumes discarded silently. | The **ATS Health Check** audits contact links, section headers, quantifiable impact metrics, and action verb density with an actionable letter grade (A–D). |
+| **Experience Tenure Parsing** | Naive parsers discard numeric dates (`07/2025–07/2026`) or sum to `0.0 yrs`, falsely triggering hard rejections. | Employs boundary-safe header detection, dual date formats (`MM/YYYY` and named months), inclusive month math, and explicit tenure extraction (**1.3 yrs** verified). |
+| **The "ATS Black Hole"** | Candidates receive generic rejection emails with zero explanation of why they were filtered out. | Provides complete evidence transparency: exact matched skills, missing skills, tenure gap, and clear safety gate notifications. |
+| **Missing Skill Gaps** | Knowing you lack a skill (e.g. Docker, AWS, or Terraform) doesn't teach you how to articulate relevant accomplishments. | Built-in **AI Resume Tailor** generates role-customized STAR bullet points (*Situation, Task, Action, Result*) targeting missing skills with measurable metrics. |
+| **Application Fatigue** | Applying to hundreds of jobs manually without tracking results leads to burnout. | Features **1-Click Deep Match** for instant drilldown and a **CSV Application Tracker** exporting ranked roles with clean direct application links. |
+| **Silent Formatting Rejections** | Missing contact links, non-standard section headers, or weak passive verbs get resumes discarded silently. | The **ATS Health Check** audits contact channels, headers, quantifiable metrics, and action verb density with an actionable letter grade (A–D). |
 
-### For Recruiters & Hiring Managers
+### 🏢 For Recruiters & Talent Acquisition
 
-- **Conservative Evidence Matching**: Avoids hallucinated skill matches. Related technologies (e.g., Java vs. Scala) are flagged as related rather than automatically assumed satisfied.
-- **Dynamic Weight Re-balancing**: Automatically detects whether a job description includes education or competency requirements. If a JD doesn't mention a degree, candidates are **not** penalized 10%—the remaining weights scale proportionally to 100%.
-- **Calibrated Semantic Similarity**: Raw TF-IDF cosine similarity rarely exceeds 0.35 in real-world resumes. ResumeMatch uses a calibrated logistic curve mapping realistic cosine ranges (0.05–0.40) to meaningful similarity scores (20%–100%).
-- **Formatted ATS Reports**: Downloadable `.docx` executive summary cards ready to share with hiring executives and team leads.
+- **Conservative Direct Evidence**: Semantic similarity is never treated as proof of a skill. Related tools are flagged as supporting evidence rather than directly satisfied.
+- **Production Seniority Knockouts**: Junior candidates cannot achieve false "Excellent Matches" on senior positions. A candidate with 1.3 years applying for a 7-year Lead role is automatically gated to $\le 45\%$ (Low Match).
+- **Dynamic Weight Re-balancing**: If a job description does not specify an education requirement, candidates are **not** penalized 10%—the remaining categories scale proportionally to 100%.
+- **Calibrated Semantic Similarity**: Replaces deceptive raw cosine similarity with a calibrated logistic curve mapping realistic cosine ranges (0.05–0.40) to meaningful scores (20%–100%).
+- **Executive Audit Reports**: Downloadable formatted `.docx` reports ready to share directly with hiring committees.
 
 ---
 
-## Key Features
+## 🛡️ Production Safety & Recruiter Knockout Architecture
+
+Real-world hiring workflows enforce strict minimum qualifications. ResumeMatch ATS implements a 3-layer safety gate pipeline to eliminate false positives:
+
+<p align="center">
+  <img src="docs/assets/knockout_architecture.svg" alt="Production Safety & Recruiter Knockout Architecture" width="100%" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);" />
+</p>
+
+### 1. Seniority Shortfall Knockout Gate
+When a position mandates senior tenure ($\ge 5.0$ years) and a candidate has $< 40\%$ of the required experience or an experience deficit $> 3.5$ years:
+- **Action**: Enforces an immediate **Seniority Knockout Gate**.
+- **Score Cap**: Hard ceiling at **$\le 45.0\%$ (Low Match)**.
+- **Transparency**: Explains the exact deficit: *"Role requires 7 yrs (Senior/Staff level); candidate has 1.3 yrs (deficit of 5.7 yrs)."*
+
+### 2. Section-Aware Mandatory vs. Preferred Weighting
+Job descriptions explicitly separate mandatory requirements from optional preferences:
+- **Mandatory Requirements** (*"Required Qualifications"*, *"Must Haves"*, *"Basic Qualifications"*): Weighted at **85%** of the technical score.
+- **Preferred Requirements** (*"Preferred Qualifications"*, *"Nice to Have"*, *"Bonus"*): Weighted at **15%**.
+- **Benefit**: Missing a preferred "bonus" skill never unfairly triggers a technical knockout.
+
+### 3. Core Technical Qualification Gate
+If a candidate misses more than half ($> 50\%$) of the mandatory technical qualifications:
+- **Action**: Enforces the **Core Technical Qualification Gate**.
+- **Score Cap**: Hard ceiling at **$\le 58.0\%$ (Moderate Match)**.
+- **Benefit**: Prevents non-technical candidates from ranking as high matches based solely on generic buzzwords.
+
+### 4. Incomplete Job Description Guard
+If a database record contains zero verifiable technical skills (such as a 10-word teaser snippet):
+- **Action**: Enforces the **Incomplete JD Guard**.
+- **Score Cap**: Hard ceiling at **$\le 55.0\%$**.
+- **Benefit**: Eliminates false 94%+ match rankings caused by lack of stated requirements.
+
+---
+
+## ⚡ Key Platform Capabilities
 
 ### 1. Dual Matching Modes
-
-The Streamlit interface offers two specialized operating modes:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -95,103 +140,107 @@ The Streamlit interface offers two specialized operating modes:
 ├───────────────────────────────────┬────────────────────────────────────┤
 │   🎯 Mode 1: Deep Single Match    │   🚀 Mode 2: Auto-Job Recommender  │
 │  • Custom JD text paste OR        │  • Live search over 6,200+ roles   │
-│  • Select from 6,200+ live jobs   │  • Filter by category & recency    │
+│  • Select from 6,200+ live jobs   │  • Filter by category & tenure     │
 │  • 6 detailed analysis tabs       │  • Top matching jobs ranked        │
 │  • Radar chart & DOCX download    │  • 1-Click Deep Match & CSV export │
+│  • Gating badges & explanations   │  • Clean 1-click 'Apply' buttons   │
 └───────────────────────────────────┴────────────────────────────────────┘
 ```
 
-- **Mode 1: Deep Single Job Match**: Perform a deep-dive match between your uploaded resume and a specific job description. Choose between pasting raw job text or selecting a role from the live Supabase catalog. Includes 6 interactive tabs:
-  1. **Overview**: ATS Score gauge, recommendation banner, category score breakdown, and candidate experience gap.
-  2. **Requirements**: Structured requirement evidence (Status, Weight, Evidence Quote).
-  3. **Evidence**: Matched skills, alias matches, missing required skills, and preferred skills.
-  4. **ATS Notes**: Contextual alignment (Job Title overlap, Seniority, Location, Work Authorization).
-  5. **🎯 AI Resume Tailor**: Tailored professional summary, STAR bullet points, categorized ATS skills block, and keyword placement guide.
-  6. **🩺 ATS Health Check**: Parseability audit, contact verification, header check, quantifiable metrics, and action verb density.
+- **Mode 1: Deep Single Job Match**: Perform an exhaustive evaluation against a specific job posting with 6 interactive tabs:
+  1. **📊 Score Breakdown & Overview**: Animated SVG radial gauge, category breakdown, candidate tenure gap, and active safety gates.
+  2. **🎯 AI Resume Tailor**: Tailored professional summary, STAR bullet points, categorized skills block, and placement guide.
+  3. **🩺 ATS Health Check**: Parseability score, contact channels, standard headers, quantifiable metrics, and active verbs.
+  4. **📋 Requirements Analysis**: Requirement-level table showing exact text quotes, status, weight, and score.
+  5. **🔍 Evidence Details**: Direct skill matches, canonical aliases, missing required skills, and related technologies.
+  6. **🧭 Context & Alignment**: Job title overlap, seniority rating, location match, and work authorization check.
 
-- **Mode 2: Auto-Job Recommender**: Upload your resume once and automatically discover the best-fitting jobs from the live database. Filter by Job Category, Experience Level, and Posting Recency (Last 24 Hours, Last 7 Days, Last 30 Days).
+- **Mode 2: Auto-Job Recommender**: Upload your resume once and instantly rank live jobs from the 6,200+ cloud catalog with direct `🔗 Apply` links.
 
 ---
 
 ### 2. 1-Click Deep Match Inspection
 
-When browsing recommended jobs in Mode 2, clicking **🔍 Inspect Full Match** on any job card instantly:
-1. Transfers the complete job description, title, and company into Mode 1.
-2. Automatically recalculates all requirement evidence, skill matches, and context alignments.
-3. Switches the view directly to the 6-tab deep analysis interface without requiring the user to re-upload their resume or copy text.
+When browsing opportunities in Mode 2, clicking **🔍 Inspect Full Match** on any recommendation card:
+1. Transfers the full job title, company, and complete uncut description into Mode 1.
+2. Recalculates all structured requirement evidence and context alignments.
+3. Automatically transitions the interface into the 6-tab deep analysis view with **100% bitwise score parity**.
+4. Includes a gap-positioned **`⬅️ Back to Top Search Recommendations`** button to return with all filters intact.
 
 ---
 
-### 3. CSV Job Application Tracker
+### 3. 📊 CSV Job Application Tracker (Google Sheets / Excel)
 
-Clicking **📥 Export to CSV (Job Tracker)** in the Recommender tab downloads a structured spreadsheet formatted ready for import into **Google Sheets**, **Excel**, or **Notion**:
+Clicking **📥 Export to CSV (Job Tracker)** downloads a structured spreadsheet formatted ready for import into **Google Sheets**, **Microsoft Excel**, or **Notion**:
 
-| Column Name | Description |
+| Column Header | Description |
 | :--- | :--- |
-| **Job Title** | Title of the position |
+| **Rank** | Numerical ranking by ATS Match Score |
+| **Job Title** | Stated title of the opportunity |
 | **Company** | Hiring organization |
-| **Match Score (%)** | Computed ATS overall score |
-| **Match Category** | Excellent, Strong, Moderate, Low, or Poor Match |
-| **Fit Recommendation** | Actionable recommendation (e.g., Strongly Recommend Interview) |
-| **Key Matched Skills** | Comma-separated list of confirmed overlapping skills |
-| **Missing Skills** | Skills required by the role not present on the resume |
-| **LinkedIn Apply URL** | Direct URL to apply on LinkedIn |
-| **Application Status** | Pre-populated as `Ready to Apply` |
-| **Date Discovered** | Timestamp of discovery |
+| **Location** | Geographical location or Remote status |
+| **ATS Match Score** | Computed percentage match score |
+| **Recommendation Fit** | Excellent, Good, Moderate, or Low Match |
+| **Matched Skills** | Comma-separated list of confirmed overlapping skills |
+| **Missing Skills** | Required skills missing from the resume |
+| **Candidate Experience** | Stated/parsed career tenure (years) |
+| **Required Experience** | Job requirement tenure (years) |
+| **Application URL** | Direct URL to apply online |
+| **Application Status** | Pre-populated as `Ready to Apply` for pipeline tracking |
 
 ---
 
-### 4. 🩺 ATS Resume Health Check & Audit
+### 4. 🎯 AI Resume Tailor & STAR Accomplishment Generator
 
-Located in Tab 6 and available via `POST /resume/health`, the health engine checks critical ATS parseability factors:
-
-- **Health Score & Grade**: 0–100 scale with Letter Grades (Grade A: 85+, Grade B: 70–84, Grade C: 50–69, Grade D: <50).
-- **Contact Details Audit**: Detects Email, Phone Number, LinkedIn profile, GitHub portfolio, and Location.
-- **ATS Section Headers**: Verifies standard headers (`Summary`, `Experience`, `Education`, `Skills`, `Projects`).
-- **Quantifiable Metrics Detector**: Flags whether your bullet points contain measurable business impact (percentages, dollar amounts, metrics).
-- **Action Verb Strength**: Measures verb density (e.g., *spearheaded, architected, optimized, deployed*) vs. passive phrases.
-
----
-
-### 5. 🎯 AI Resume Tailor & Bullet Optimizer
-
-Located in Tab 5 and available via `POST /resume/tailor`, the tailor engine provides instant, copy-pasteable assets:
+Available in Mode 1 (Tab 2) and within every recommendation card expander in Mode 2:
 
 - **Tailored Professional Summary**: A 3-sentence summary highlighting the candidate's exact years of experience, primary technical stack, and direct alignment with the target role.
-- **STAR-Formula Missing Skill Bullets**: For every critical missing skill (e.g., Docker, AWS, PySpark), generates a production-ready bullet point:
-  > *`Developed and deployed containerized microservices using Docker, streamlining ETL deployment workflows and cutting local environment provisioning time by 40%.`*
-- **Categorized ATS Skills Section**: Cleanly structured into *Languages & Core*, *Frameworks & Tools*, *Databases & Platforms*, and *Methodologies*.
-- **Strategic Keyword Placement Guide**: Actionable guidance on where to place keywords across the resume to maximize ATS scanner visibility.
+- **Dual-Mode STAR Bullet Points**:
+  - **For Missing Skills**: Generates production-ready bullets targeting technical gaps:
+    > *`[Docker] Developed and deployed containerized microservices using Docker, streamlining ETL deployment workflows and cutting local environment provisioning time by 40%.`*
+  - **For 100% Skill Matches**: Generates high-impact accomplishment bullets showcasing core matched strengths:
+    > *`[Python] Engineered automated Python data processing scripts and ETL workflows, eliminating 15+ hours of manual data extraction and validation each week.`*
+- **Optimized ATS Skills Block**: Formatted for direct copy-paste into resume headers.
 
 ---
 
-### 6. Accurate Candidate Experience Engine
+### 5. 🩺 ATS Resume Health Check & Parseability Audit
 
-Many ATS parsers break when calculating candidate experience, resulting in `Candidate Experience: 0.0 yrs` and automatic rejections. ResumeMatch ATS employs a multi-strategy extraction engine:
+Evaluates technical parseability against standard ATS ingestion algorithms:
 
-1. **Boundary-Safe Header Detection**: Distinguishes true section headers (e.g., `WORK EXPERIENCE`) from inline mentions (e.g., *"1+ year of hands-on experience"* in an introductory summary).
-2. **Comprehensive Date Parsing**: Handles standard date intervals across multiple formats:
-   - Named formats: `Jul 2025 – Present`, `Dec 2024 to Feb 2025`
-   - Numeric formats: `07/2025 – 07/2026`, `12/2024 - 02/2025`
-3. **Inclusive Tenure Calculation**: Accurately counts months between start and end dates (e.g., 07/2025 to 07/2026 = 13 months, 12/2024 to 02/2025 = 3 months $\rightarrow$ 16 months = **1.33 years $\rightarrow$ 1.3 yrs**).
-4. **Explicit Tenure Fallback**: Extracts stated tenure phrases like `1+ year of hands-on experience` or `5 years in software engineering`, selecting `max(explicit, date_range)`.
-
----
-
-### 7. Supabase Description Enrichment
-
-In the live database of 6,205 jobs, some postings contain brief teaser summaries or list description as *'Not Specified'*. ResumeMatch ATS automatically enriches these records before evaluation:
-- Injects structured column data: `min_experience_years`, `skills`, and `degree_required`.
-- Ensures required experience and skills are never defaulted to `0.0` or empty.
-- Displays visual badges in dropdowns and recommendation cards:
-  - `📄 Full JD` for comprehensive job descriptions.
-  - `📋 Brief Summary` for records enriched via structured database columns.
+- **Health Score & Grade**: 0–100 score with Letter Grades (Grade A: 85+, Grade B: 70–84, Grade C: 50–69, Grade D: <50).
+- **Contact Audit**: Confirms Email, Phone Number, LinkedIn, GitHub, and Location.
+- **Header Check**: Detects standard sections (`Summary`, `Experience`, `Education`, `Skills`, `Projects`).
+- **Quantifiable Metrics Detector**: Identifies percentage improvements, metrics, and business numbers.
+- **Action Verb Density**: Measures active verbs (*spearheaded, architected, automated, engineered*) vs. passive voice.
 
 ---
 
-## Scoring Engine & Math
+### 6. ⏱️ Accurate Candidate Experience Engine
 
-The ATS scoring engine computes an objective 0–100 match score using five core pillars:
+Solves the common industry bug where candidate experience evaluates to `0.0 yrs`:
+
+1. **Boundary-Safe Header Detection**: Distinguishes true work experience headers from summary sentences.
+2. **Dual-Format Date Parsing**: Handles named months (`Jul 2025 – Present`) and numeric intervals (`07/2025 – 07/2026`).
+3. **Inclusive Month Math**: Accurately counts months between start and end dates (e.g. 07/2025 to 07/2026 = 13 months $\rightarrow$ **1.3 yrs**).
+4. **Explicit Tenure Fallback**: Extracts stated tenure phrases like `1+ year of hands-on experience`.
+
+---
+
+### 7. 🌐 Enterprise Cloud, DevOps & Security Taxonomy
+
+Comprehensive synonym and relationship mapping across modern technical stacks:
+- **Cloud & Orchestration**: `AWS`, `Azure`, `GCP`, `OCI`, `OKE`, `Kubernetes`, `Docker`, `Containers`.
+- **Infrastructure as Code**: `Terraform`, `Ansible`, `IaC`.
+- **Observability & Telemetry**: `Prometheus`, `Grafana`, `OpenTelemetry` (`OTel`), `Datadog`, `Splunk`.
+- **Security & Identity**: `Microsoft Purview`, `Zscaler`, `IAM`, `OAuth`, `Zero Trust`.
+- **Languages & Frameworks**: `Python`, `Go`, `Java`, `FastAPI`, `Spring Boot`, `React`, `Next.js`.
+
+---
+
+## 📐 Scoring Engine Mathematical Architecture
+
+The ATS scoring engine computes an objective 0–100 score using five core pillars:
 
 $$\text{Final ATS Score} = w_{\text{tech}} S_{\text{tech}} + w_{\text{exp}} S_{\text{exp}} + w_{\text{edu}} S_{\text{edu}} + w_{\text{comp}} S_{\text{comp}} + w_{\text{tfidf}} S_{\text{tfidf}}$$
 
@@ -199,49 +248,50 @@ $$\text{Final ATS Score} = w_{\text{tech}} S_{\text{tech}} + w_{\text{exp}} S_{\
 
 | Category | Base Weight | Description |
 | :--- | :---: | :--- |
-| **Technical Skills** ($S_{\text{tech}}$) | **35%** | Exact, canonical alias, and partial skill matches. |
-| **Experience** ($S_{\text{exp}}$) | **25%** | Candidate tenure vs. minimum required experience. |
-| **Education** ($S_{\text{edu}}$) | **10%** | Degree level match (BS, MS, PhD) and field relevance. |
-| **Competencies** ($S_{\text{comp}}$) | **15%** | Core competencies and soft skill alignment. |
-| **TF-IDF Similarity** ($S_{\text{tfidf}}$) | **15%** | Calibrated semantic corpus similarity. |
+| **Technical Skills** ($S_{\text{tech}}$) | **35%** | Exact, canonical alias, and partial matches (85% Mandatory / 15% Preferred). |
+| **Experience Tenure** ($S_{\text{exp}}$) | **20%** | Candidate tenure vs. minimum required experience. |
+| **Education Relevance** ($S_{\text{edu}}$) | **10%** | Degree level match (BS, MS, PhD) and field alignment. |
+| **Core Competencies** ($S_{\text{comp}}$) | **10%** | Soft competencies, problem-solving, and collaboration. |
+| **Responsibilities** ($S_{\text{resp}}$) | **10%** | Direct evidence of primary day-to-day job duties. |
+| **Title & Seniority** ($S_{\text{title}}$) | **5%** | Stated job title overlap and seniority level. |
+| **Context & Authorization** ($S_{\text{cont}}$) | **5%** | Location alignment and work authorization. |
+| **Calibrated TF-IDF** ($S_{\text{tfidf}}$) | **5%** | Calibrated corpus vocabulary overlap. |
 
-### Dynamic Weight Re-balancing
+### Dynamic Weight Re-balancing Math
 
-When a job description does not specify an education requirement or soft competencies, traditional ATS engines assign a zero, docking the candidate up to 25% through no fault of their own.
+When a job description does not specify an education requirement or soft competencies, traditional ATS engines assign a zero, docking the candidate up to 25% unfairly.
 
 ResumeMatch ATS detects active categories and **dynamically re-balances weights proportionally**:
 
 $$w_i^{\text{rebalanced}} = \frac{w_i^{\text{base}}}{\sum_{j \in \text{Active Categories}} w_j^{\text{base}}}$$
 
-*Example: If Education (10%) is omitted, the remaining 90% is redistributed. Technical Skills increases from 35% to 38.9%, Experience from 25% to 27.8%, Competencies from 15% to 16.7%, and TF-IDF from 15% to 16.7%. All active weights always sum to exactly 1.0 (100%).*
+### Calibrated TF-IDF Logistic Sigmoid Curve
 
-### Calibrated TF-IDF Curve
-
-Raw TF-IDF cosine similarity between a concise resume and a detailed job description naturally clusters between $0.08$ and $0.35$. Using raw cosine directly results in deflated scores.
+Raw TF-IDF cosine similarity between a concise resume and an exhaustive job description naturally clusters between $0.08$ and $0.35$. Using raw cosine directly results in severely deflated scores.
 
 ResumeMatch ATS applies a calibrated logistic sigmoid transformation:
 
 $$S_{\text{calibrated}} = \frac{1}{1 + e^{-18 \times (\text{cosine} - 0.18)}}$$
 
-| Raw Cosine Similarity | Standard Interpretation | Calibrated ATS Score |
+| Raw Cosine Similarity | Real-World Meaning | Calibrated ATS Score |
 | :---: | :---: | :---: |
 | **< 0.05** | Negligible vocabulary overlap | **15% – 25%** |
 | **0.10** | Moderate topical overlap | **45% – 55%** |
 | **0.18** | Solid technical alignment (inflection point) | **70%** |
 | **0.25+** | High semantic alignment | **85% – 95%** |
-| **0.35+** | Near-complete vocabulary alignment | **98% – 100%** |
+| **0.35+** | Complete vocabulary alignment | **98% – 100%** |
 
 ---
 
-## System Architecture
+## 🏗️ System Architecture & Workflow Pipeline
 
 ```mermaid
 flowchart TD
-    subgraph UI ["Frontend (Streamlit)"]
+    subgraph UI ["Modern Frontend (Streamlit)"]
         A["Resume File (PDF / DOCX / TXT)"]
-        B1["Mode 1: Single Job Match\n(Custom JD or Supabase Role)"]
+        B1["Mode 1: Deep Single Match\n(Custom JD or Supabase Role)"]
         B2["Mode 2: Auto-Job Recommender\n(Search 6,200+ Live Jobs)"]
-        UI_Tabs["6 Analysis Tabs:\nOverview | Requirements | Evidence\nATS Notes | AI Tailor | Health Check"]
+        UI_Tabs["6 Analysis Tabs:\nScore Breakdown | AI Tailor | Health Check\nRequirements | Evidence | Context"]
         UI_CSV["1-Click Deep Match &\nCSV Job Tracker Export"]
     end
 
@@ -256,14 +306,14 @@ flowchart TD
     subgraph NLP ["NLP & Extraction Engine"]
         N_Exp["Experience Extractor\n(Date Ranges, Inclusive Tenure, Explicit)"]
         N_Skill["Skill Extractor\n(Exact, Canonical Aliases, Boundary Check)"]
-        N_Req["Requirement Extractor\n(Technical, Education, Competencies)"]
+        N_Req["Requirement Extractor\n(Section-Aware Mandatory vs Preferred)"]
         N_Cont["Context Extractor\n(Title, Seniority, Location, Authorization)"]
     end
 
-    subgraph MatchEngine ["Matching & Scoring Services"]
-        M_Evid["Evidence Matcher\n(Status: Met / Partial / Missing)"]
-        M_Score["Dynamic Scoring Engine\n(Proportional Re-balancing)"]
-        M_Tfidf["Calibrated TF-IDF Matcher\n(Sigmoid Mapping Curve)"]
+    subgraph Gates ["Production Safety Pipeline"]
+        G_Sen["Seniority Knockout Gate\n(≥5 yrs req, <40% tenure → Cap ≤45%)"]
+        G_Tech["Technical Gate\n(<50% mandatory skills → Cap ≤58%)"]
+        G_Inc["Incomplete JD Guard\n(0 skills detected → Cap ≤55%)"]
     end
 
     subgraph Storage ["Data Sources & Persistence"]
@@ -278,10 +328,8 @@ flowchart TD
 
     R_Upload --> N_Exp & N_Skill
     R_Match --> N_Req & N_Cont
-    N_Skill & N_Req --> M_Evid
-    M_Evid & N_Exp --> M_Score
-    M_Tfidf --> M_Score
-    M_Score --> DB_Local
+    N_Skill & N_Req --> Gates
+    Gates --> DB_Local
 
     R_Match --> UI_Tabs
     R_Health --> UI_Tabs
@@ -291,7 +339,7 @@ flowchart TD
 
 ---
 
-## Quick Start
+## 🚀 Quick Start Guide
 
 ### Prerequisites
 
@@ -299,7 +347,7 @@ flowchart TD
 - **PowerShell** (Windows) or **Bash** (macOS/Linux)
 - Git
 
-### Installation & Setup
+### Installation & Virtual Environment
 
 1. **Clone the repository**:
    ```powershell
@@ -333,7 +381,7 @@ flowchart TD
 
 ---
 
-### Running the Services
+### Starting the Services
 
 Start the **FastAPI Backend** (runs on port `8000`):
 ```powershell
@@ -351,7 +399,7 @@ streamlit run frontend\app.py
 
 ---
 
-### Docker Compose
+### Docker Compose Deployment
 
 Run the entire stack with a single command:
 ```powershell
@@ -360,9 +408,9 @@ docker compose up --build
 
 ---
 
-## API Reference
+## 🔌 REST API Reference
 
-The FastAPI backend exposes RESTful endpoints with OpenAPI documentation at `/docs`:
+The FastAPI backend exposes RESTful endpoints documented via OpenAPI at `/docs`:
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
@@ -385,28 +433,28 @@ The FastAPI backend exposes RESTful endpoints with OpenAPI documentation at `/do
 
 ---
 
-## Testing & Quality Assurance
+## 🧪 Automated Test Suite (41 Tests, 100% Green)
 
-ResumeMatch ATS includes an automated Pytest test suite with **100% passing tests (38/38)**:
+ResumeMatch ATS includes an automated Pytest test suite with **100% passing tests (41/41)**:
 
 ```powershell
 pytest -v
 ```
 
-### Test Suite Coverage
+### Test Suite Breakdown
 
-| Test Module | Tests | Focus Areas |
+| Test Module | Tests | Coverage & Focus Areas |
 | :--- | :---: | :--- |
-| [`tests/test_accuracy.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_accuracy.py) | **16** | Date range parsing, numeric date intervals (`07/2025–07/2026`), explicit tenure extraction, R language boundary safety, dynamic weight re-balancing, TF-IDF curve calibration. |
+| [`tests/test_accuracy.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_accuracy.py) | **18** | Numeric date intervals (`07/2025–07/2026`), explicit tenure extraction, R language boundary safety, dynamic weight re-balancing, TF-IDF curve calibration, **Seniority Knockout Gate**, **Section-Aware Mandatory vs Preferred Weighting**. |
 | [`tests/test_api.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_api.py) | **6** | Root, health check, invalid IDs, `/match/file` persistence, Supabase endpoints, and `/jobs/recommend`. |
 | [`tests/test_core.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_core.py) | **10** | Magic-byte file validation, empty data handlers, skill aliasing, and matching service boundaries. |
 | [`tests/test_health_and_tailor.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_health_and_tailor.py) | **5** | ATS health service scoring (85+ Grade A vs. Grade D), STAR bullet generation, tailored summaries, and REST API endpoints. |
-| [`tests/test_end_to_end_verification.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_end_to_end_verification.py) | **1** | Full end-to-end integration test verifying complete workflow on real candidate resume data. |
-| **Total** | **38** | **All 38 Passed (100% Green)** |
+| [`tests/test_end_to_end_verification.py`](file:///d:/ATS-Resume-Job-Matcher/tests/test_end_to_end_verification.py) | **2** | Full end-to-end integration test verifying complete workflow on real candidate resume data and bitwise Mode 1 / Mode 2 score parity. |
+| **Total** | **41** | **All 41 Passed (100% Green in ~17s)** |
 
 ---
 
-## Project Directory Structure
+## 📁 Project Directory Structure
 
 ```text
 ATS-Resume-Job-Matcher/
@@ -435,7 +483,7 @@ ATS-Resume-Job-Matcher/
 │   │   ├── context_matcher.py   # Title, seniority, location, authorization
 │   │   ├── experience_extractor.py # Tenure calculation & date range parsing
 │   │   ├── keyword_extractor.py # Cleaned keyword extraction
-│   │   ├── requirement_extractor.py # Structured JD requirement parsing
+│   │   ├── requirement_extractor.py # Section-aware requirement parsing
 │   │   └── skill_extractor.py   # Resume skill detection
 │   ├── parsers/                 # File parsers with magic-byte validation
 │   │   ├── docx_parser.py
@@ -445,7 +493,7 @@ ATS-Resume-Job-Matcher/
 │   │   ├── resume_parser.py
 │   │   └── txt_parser.py
 │   ├── scoring/                 # Dynamic ATS score calculator
-│   │   └── scoring_engine.py    # Dynamic weight re-balancing engine
+│   │   └── scoring_engine.py    # Dynamic weight re-balancing & safety gates
 │   └── services/                # Business logic services
 │       ├── docx_report_service.py # ATS Word report generator
 │       ├── job_recommender_service.py # Live job discovery & scoring
@@ -456,10 +504,13 @@ ATS-Resume-Job-Matcher/
 │       └── supabase_service.py  # Supabase PostgREST client & enrichment
 ├── docs/
 │   └── assets/
+│       ├── hero_banner.svg      # Modern dark-mode header banner
+│       ├── ats_match_dashboard.svg # Glassmorphic SaaS UI mockup
+│       ├── knockout_architecture.svg # Production knockout gates diagram
 │       └── supabase_role_selector.png # Live Streamlit UI screenshot
 ├── frontend/
 │   └── app.py                   # Streamlit user interface (dual modes, 6 tabs)
-├── tests/                       # Complete automated test suite (38 tests)
+├── tests/                       # Complete automated test suite (41 tests)
 │   ├── test_accuracy.py
 │   ├── test_api.py
 │   ├── test_core.py
@@ -474,6 +525,6 @@ ATS-Resume-Job-Matcher/
 
 ---
 
-## License
+## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
