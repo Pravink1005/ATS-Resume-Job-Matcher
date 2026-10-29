@@ -50,6 +50,7 @@ async def recommend_jobs(
     query: str = Form(''),
     time_frame: str = Form('all'),
     experience_level: str = Form('all'),
+    require_full_description: bool = Form(True),
     limit: int = Form(10),
 ):
     try:
@@ -61,6 +62,7 @@ async def recommend_jobs(
             query=query,
             time_frame=time_frame,
             experience_level=experience_level,
+            require_full_description=require_full_description,
             limit=limit,
         )
         return result

@@ -29,8 +29,9 @@ class JobRecommenderService:
         query: str = '',
         time_frame: str = 'all',
         experience_level: str = 'all',
+        require_full_description: bool = True,
         limit: int = 10,
-        scan_limit: int = 35
+        scan_limit: int = 60
     ) -> dict:
         if not self.supabase.is_configured():
             return {
@@ -63,6 +64,16 @@ class JobRecommenderService:
                 'total_matched': 0,
                 'message': 'No jobs found in Supabase matching these criteria.'
             }
+
+        # Prioritize full-length comprehensive job descriptions over brief 14-word search snippets
+        if require_full_description:
+            full_jobs = [j for j in jobs if j.get('has_full_description') and len(j.get('description', '').split()) >= 40]
+            if len(full_jobs) >= limit:
+                jobs = full_jobs
+            elif full_jobs:
+                # Include full jobs first, followed by others as fallback
+                other_jobs = [j for j in jobs if j not in full_jobs]
+                jobs = full_jobs + other_jobs
 
         scored = []
         for job in jobs:

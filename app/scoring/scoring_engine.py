@@ -95,6 +95,12 @@ class ScoringEngine:
 
         total = min(100.0, round(sum(breakdown.values()), 2))
 
+        # Incomplete / Low-Detail Job Description Guard:
+        # If the job description specified NO technical skills at all, an ATS cannot reliably verify fit.
+        # Gate score at Moderate Match (<= 55%) to prevent false 90%+ scores on 1-line teasers.
+        if raw_scores.get('technical_skill') is None:
+            total = min(total, 55.0)
+
         # Core Technical Qualification Gate:
         # If candidate misses more than half of the required technical skills (< 50%),
         # overall ATS score must be gated at Moderate Match (< 60%) to prevent false positives.

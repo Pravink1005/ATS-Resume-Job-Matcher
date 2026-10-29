@@ -792,7 +792,25 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
         scores = data.get('component_scores', {})
         overall = float(data.get('overall_score', 0))
 
-        st.write('')
+        # Position Back to Search Button directly in the gap above Results
+        if st.session_state.get('recommendations_data'):
+            num_recs = len(st.session_state['recommendations_data'].get('recommendations', []))
+            st.markdown(
+                f'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;'
+                f'background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:12px;margin:0.8rem 0 0.5rem 0;">'
+                f'<span style="color:#cbd5e1;font-size:0.88rem;font-weight:600;">'
+                f'🔍 Currently inspecting selected role from your search recommendations ({num_recs} jobs available)</span>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+            gap_col1, gap_col2 = st.columns([1.8, 3])
+            with gap_col1:
+                if st.button('⬅️ Back to Top Search Recommendations', key='btn_back_gap_top', type='primary', use_container_width=True):
+                    st.session_state['pending_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
+                    st.rerun()
+            with gap_col2:
+                st.caption('Return to your ranked job discovery list with all search filters and scores intact.')
+
         st.markdown('---')
 
         # Executive Match Header Card
@@ -1230,6 +1248,15 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
             }
             time_choice = st.selectbox('Time Posted:', options=list(time_map.keys()), key='recom_time')
 
+        rec_opt_col1, rec_opt_col2 = st.columns([2, 1])
+        with rec_opt_col1:
+            full_only = st.checkbox(
+                '📄 Only Recommend Jobs with Complete Full Descriptions (300+ words)',
+                value=True,
+                key='recom_full_desc_only',
+                help='Filters out short search snippets (10-20 words) so you only evaluate real, comprehensive job descriptions.'
+            )
+
         rec_btn_col1, rec_btn_col2 = st.columns([2, 1])
         with rec_btn_col1:
             top_n = st.slider('Number of Top Matches to Return:', min_value=3, max_value=25, value=10, key='recom_top_n')
@@ -1257,6 +1284,7 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                             'query': search_keywords,
                             'time_frame': time_map[time_choice],
                             'experience_level': exp_map[exp_choice],
+                            'require_full_description': str(full_only),
                             'limit': top_n,
                         },
                         timeout=90
@@ -1321,7 +1349,8 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
             for idx, r in enumerate(recs, start=1):
                 score = r['overall_score']
                 score_color = '#10b981' if score >= 75 else '#0ea5e9' if score >= 55 else '#f59e0b' if score >= 40 else '#f43f5e'
-                desc_badge = '🟢 Full JD' if r.get('has_full_description') else '📋 Enriched Summary'
+                is_full = r.get('has_full_description', False) and len(r.get('description', '').split()) >= 40
+                desc_badge = f'🟢 Full JD ({len(r.get("description", "").split()):,} words)' if is_full else f'📋 Brief Teaser ({len(r.get("description", "").split())} words)'
 
                 with st.container(border=True):
                     head_col1, head_col2 = st.columns([3.2, 1.2])
@@ -1332,7 +1361,7 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                             f'<span class="skill-pill pill-neutral">🏢 {r["company"]}</span>'
                             f'<span class="skill-pill pill-neutral">📍 {r["location"]}</span>'
                             f'<span class="skill-pill pill-alias">🕒 {r.get("posted_label", "Recent")}</span>'
-                            f'<span class="skill-pill pill-match">{desc_badge}</span>'
+                            f'<span class="skill-pill {"pill-match" if is_full else "pill-preferred"}">{desc_badge}</span>'
                             f'</div>',
                             unsafe_allow_html=True
                         )
@@ -1387,17 +1416,31 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                         else:
                             st.caption('No direct application URL')
 
-                    # Full Job Description Viewer (Uncut)
+                    # Full Job Description Viewer
                     full_desc = r.get('description', '')
                     word_cnt = len(full_desc.split()) if full_desc else 0
-                    with st.expander(f'📄 Full Job Description ({word_cnt:,} words)', expanded=False):
+                    is_full_desc = r.get('has_full_description', False) and word_cnt >= 40
+
+                    expander_label = (
+                        f'📄 Complete Job Description ({word_cnt:,} words)'
+                        if is_full_desc
+                        else f'⚠️ Brief Search Snippet ({word_cnt} words — Full Description on Job Board)'
+                    )
+                    with st.expander(expander_label, expanded=False):
+                        if not is_full_desc:
+                            st.info(
+                                f'ℹ️ This database record only contains a brief {word_cnt}-word search snippet from the job board. '
+                                f'Click the "Apply on LinkedIn" button above to view full responsibilities and qualifications online.'
+                            )
                         st.text_area(
-                            f'Complete Job Description for {r["title"]}:',
+                            f'Job Description for {r["title"]}:',
                             value=full_desc,
                             height=300,
                             disabled=True,
                             key=f'full_jd_view_{r["job_id"]}_{idx}'
                         )
+                        if r.get('link'):
+                            st.markdown(f'[🔗 View Full Posting on External Portal]({r["link"]})')
 
                     tailor_info = r.get('tailoring_suggestions')
                     if tailor_info and tailor_info.get('star_bullet_points'):
