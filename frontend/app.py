@@ -543,6 +543,10 @@ if st.session_state.get('pending_inspect_job'):
     if not st.session_state.get('resume_name') and st.session_state.get('saved_resume_tuple'):
         st.session_state['resume_name'] = st.session_state['saved_resume_tuple'][0]
 
+# Handle pending navigation mode switch (e.g. Back to Top Search Recommendations)
+if st.session_state.get('pending_nav_mode'):
+    st.session_state['main_nav_mode'] = st.session_state.pop('pending_nav_mode')
+
 
 # ==============================================================================
 # HERO HEADER & BRAND STATUS BAR
@@ -582,7 +586,7 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
         back_col1, back_col2 = st.columns([1.8, 3])
         with back_col1:
             if st.button('⬅️ Back to Top Search Recommendations', key='btn_back_to_recs_banner', type='secondary', use_container_width=True):
-                st.session_state['main_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
+                st.session_state['pending_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
                 st.rerun()
         with back_col2:
             num_recs = len(st.session_state['recommendations_data'].get('recommendations', []))
@@ -825,7 +829,7 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
             with action_btn_col2:
                 if st.session_state.get('recommendations_data'):
                     if st.button('⬅️ Back to Top Search Recommendations', key='btn_back_to_recs_results', type='secondary', use_container_width=True):
-                        st.session_state['main_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
+                        st.session_state['pending_nav_mode'] = '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)'
                         st.rerun()
 
         st.write('')
@@ -1364,7 +1368,7 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                     st.write('')
 
                     # Action buttons
-                    b_col1, b_col2, b_col3 = st.columns([1.2, 1.2, 1.2])
+                    b_col1, b_col2 = st.columns([1.2, 1.2])
                     with b_col1:
                         inspect_btn = st.button(
                             '🔍 Inspect Full Match',
@@ -1383,9 +1387,17 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                         else:
                             st.caption('No direct application URL')
 
-                    with b_col3:
-                        with st.expander('📄 Description Preview'):
-                            st.text(r.get('description', '')[:1200] + ('...' if len(r.get('description', '')) > 1200 else ''))
+                    # Full Job Description Viewer (Uncut)
+                    full_desc = r.get('description', '')
+                    word_cnt = len(full_desc.split()) if full_desc else 0
+                    with st.expander(f'📄 Full Job Description ({word_cnt:,} words)', expanded=False):
+                        st.text_area(
+                            f'Complete Job Description for {r["title"]}:',
+                            value=full_desc,
+                            height=300,
+                            disabled=True,
+                            key=f'full_jd_view_{r["job_id"]}_{idx}'
+                        )
 
                     tailor_info = r.get('tailoring_suggestions')
                     if tailor_info and tailor_info.get('star_bullet_points'):
