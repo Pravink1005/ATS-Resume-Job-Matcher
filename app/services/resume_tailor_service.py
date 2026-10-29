@@ -25,6 +25,14 @@ class ResumeTailorService:
         'redis': "Implemented a Redis in-memory caching layer for frequently accessed query results, reducing database load by 60% and lowering p95 response times.",
         'microservices': "Refactored a monolithic backend architecture into modular microservices communicating via REST and gRPC, improving deployment independence and fault isolation.",
 
+        # Additional High-Frequency Skills
+        'api': "Designed, tested, and integrated resilient RESTful APIs, enabling seamless cross-service communication and achieving 99.9% request success rates.",
+        'rest api': "Architected and documented production RESTful APIs with automated OpenAPI schemas, cutting partner integration onboarding times by 40%.",
+        'linux': "Administered production Linux (Ubuntu/Debian) environments, automating server configuration, package management, and system monitoring with bash scripts.",
+        'java': "Engineered enterprise backend microservices in Java, leveraging multithreading and clean design patterns to optimize application throughput.",
+        'git': "Implemented Git version control workflows and branch management strategies, accelerating collaborative release pipelines and eliminating merge conflicts.",
+        'jenkins': "Configured distributed Jenkins build nodes and automated declarative pipeline triggers, reducing build cycle times by 45%.",
+
         # Frontend & Web
         'react': "Developed responsive, accessible single-page web applications using React and modern hooks, enhancing mobile user engagement by 28% and user satisfaction scores.",
         'next.js': "Engineered server-side rendered (SSR) web applications with Next.js and TypeScript, reducing initial page load times by 45% and boosting SEO performance.",
@@ -82,8 +90,8 @@ class ResumeTailorService:
         # 1. Generate Custom Tailored Professional Summary
         summary = self._generate_summary(target_title, exp_years, matched_skills, missing_skills, job_description)
 
-        # 2. Generate STAR-Method Bullet Points for Missing Skills
-        tailored_bullets = self._generate_star_bullets(missing_skills, target_title)
+        # 2. Generate STAR-Method Bullet Points (for missing skills, or showcasing matched strengths if none missing)
+        tailored_bullets = self._generate_star_bullets(missing_skills, target_title, matched_skills)
 
         # 3. Categorized ATS Skills Section
         skills_section = self._format_skills_section(matched_skills, missing_skills)
@@ -132,9 +140,25 @@ class ResumeTailorService:
 
         return f"{s1} {s2} {s3}"
 
-    def _generate_star_bullets(self, missing_skills: List[str], target_title: str) -> List[Dict[str, str]]:
+    def _generate_star_bullets(
+        self,
+        missing_skills: List[str],
+        target_title: str,
+        matched_skills: List[str] = None
+    ) -> List[Dict[str, str]]:
         bullets = []
-        for raw_skill in missing_skills[:6]:
+
+        if missing_skills:
+            target_skills = missing_skills[:6]
+            category_label = 'Missing High-Impact Skill'
+        elif matched_skills:
+            target_skills = matched_skills[:4]
+            category_label = 'Core Matched Strength'
+        else:
+            target_skills = []
+            category_label = 'General Technical Competency'
+
+        for raw_skill in target_skills:
             canon = normalize_skill(raw_skill)
             display_skill = raw_skill.title()
 
@@ -149,7 +173,7 @@ class ResumeTailorService:
 
             bullets.append({
                 'skill': display_skill,
-                'category': 'Missing High-Impact Skill',
+                'category': category_label,
                 'bullet_point': bullet_text,
                 'formula': 'Action Verb + Skill Context + Measurable Impact (STAR method)'
             })

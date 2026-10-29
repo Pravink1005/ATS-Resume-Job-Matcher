@@ -478,10 +478,11 @@ def build_docx_report(data, resume_name):
         document.add_heading('Tailored Professional Summary', level=1)
         document.add_paragraph(tailoring.get('tailored_summary', ''))
 
-        document.add_heading('STAR Method Bullet Points (Tailored for Missing Skills)', level=1)
+        document.add_heading('STAR Method Bullet Points (Role & Skill Tailored)', level=1)
         for bullet in tailoring.get('star_bullet_points', []):
+            cat_label = bullet.get('category', 'Target Skill')
             document.add_paragraph(
-                f"[{bullet.get('skill', '')}] {bullet.get('bullet_point', '')}",
+                f"[{bullet.get('skill', '')}] ({cat_label}): {bullet.get('bullet_point', '')}",
                 style='List Bullet'
             )
 
@@ -965,14 +966,15 @@ if main_nav == '🎯 Mode 1: Deep Single Job Match':
                 st.code(tailoring.get('tailored_summary', ''), language='text')
 
                 # 2. STAR Bullets
-                st.markdown('#### 2. High-Impact STAR Bullet Points (Tailored for Missing Skills)')
+                st.markdown('#### 2. High-Impact STAR Bullet Points')
                 st.caption('Insert these production-ready bullet points under your work experience or project achievements:')
                 star_bullets = tailoring.get('star_bullet_points', [])
                 if star_bullets:
                     for idx, bullet in enumerate(star_bullets, start=1):
                         with st.container(border=True):
                             b1, b2 = st.columns([3, 1])
-                            b1.markdown(f"**#{idx} Skill Focus:** `{bullet.get('skill', '')}`")
+                            cat_label = bullet.get('category', 'Target Skill')
+                            b1.markdown(f"**#{idx} Skill Focus:** `{bullet.get('skill', '')}` *({cat_label})*")
                             b2.markdown('<span class="skill-pill pill-alias">⚡ STAR Formula</span>', unsafe_allow_html=True)
                             st.code(bullet.get('bullet_point', ''), language='text')
                 else:
@@ -1443,8 +1445,21 @@ elif main_nav == '🚀 Mode 2: Auto-Job Recommender (6,200+ Live Jobs)':
                             st.markdown(f'[🔗 View Full Posting on External Portal]({r["link"]})')
 
                     tailor_info = r.get('tailoring_suggestions')
-                    if tailor_info and tailor_info.get('star_bullet_points'):
-                        with st.expander('🎯 Tailored Resume Bullet Points for This Job', expanded=False):
+                    if tailor_info:
+                        has_bullets = bool(tailor_info.get('star_bullet_points'))
+                        with st.expander('🎯 Tailored Resume Bullet Points & Summary for This Job', expanded=False):
                             st.caption(f"Role target: **{tailor_info.get('target_title', r['title'])}**")
-                            for b in tailor_info.get('star_bullet_points', [])[:3]:
-                                st.code(f"[{b.get('skill')}] {b.get('bullet_point')}", language='text')
+                            if not r.get('missing_skills'):
+                                st.success('🎉 Full Skill Match: You already possess all detected core skills for this role! Below are tailored summary & accomplishment bullets to highlight your strengths:')
+                            else:
+                                st.info(f"💡 Target {len(r.get('missing_skills'))} Skill Gaps: Insert these STAR-formula bullets into your experience to maximize ATS keyword alignment:")
+
+                            if has_bullets:
+                                for b in tailor_info.get('star_bullet_points', [])[:3]:
+                                    cat_label = b.get('category', 'Target Skill')
+                                    st.markdown(f"**[{b.get('skill')}]** *({cat_label})*")
+                                    st.code(b.get('bullet_point'), language='text')
+
+                            if tailor_info.get('tailored_summary'):
+                                st.markdown('**Tailored Professional Summary:**')
+                                st.code(tailor_info.get('tailored_summary'), language='text')
